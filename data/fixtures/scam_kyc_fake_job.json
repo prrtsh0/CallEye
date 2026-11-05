@@ -1,0 +1,13 @@
+{
+  "id": "scam_kyc_fake_job",
+  "lang": "hi",
+  "label": "scam",
+  "source": "script",
+  "segments": [
+    {"t": 0.0, "text": "aapke KYC update karne ka time aa gaya hai"},
+    {"t": 3.0, "text": "aapka account aaj block ho jayega agar update nahi kiya"},
+    {"t": 6.0, "text": "job ke liye ek processing fee bharni hogi"},
+    {"t": 9.0, "text": "mujhe aapka CVV aur debit card details chahiye"},
+    {"t": 12.0, "text": "aaj hi karna hai, kal der ho jayegi"}
+  ]
+}

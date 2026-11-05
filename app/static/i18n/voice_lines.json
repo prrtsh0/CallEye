@@ -1,0 +1,7 @@
+[
+  {"id": "greeting", "language": "hi", "text": "Namaste. CallEye aapki call sun raha hai. Aaram se check karein."},
+  {"id": "green", "language": "hi", "text": "Abhi tak koi warning sign nahi mila. Phir bhi aaram se check karein."},
+  {"id": "amber", "language": "hi", "text": "Sambhal kar. Action lene se pehle check karein."},
+  {"id": "red", "language": "hi", "text": "Call khatam karein. Aapke guardian ko bata diya gaya hai."},
+  {"id": "verify", "language": "hi", "text": "Kripya aapna parivaar ka safe word poochhein."}
+]

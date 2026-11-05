@@ -1,0 +1,27 @@
+# Secrets & local env
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Build artifacts
+*.log
+*.mp3
+*.wav
+app/detector/model.joblib
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Generated docs (source .docx attachments are kept)
+docs/*.docx.txt

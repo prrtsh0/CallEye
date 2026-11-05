@@ -1,0 +1,13 @@
+# Ruff configuration
+line-length = 100
+
+[lint]
+# Keep a strict default set but ignore the opinionated rules that are
+# idiomatic here (best-effort socket cleanup, FastAPI File(), rule thresholds).
+select = ["E", "F", "I", "B", "UP", "RUF", "PL", "S", "BLE"]
+ignore = ["BLE001", "S110", "S112", "B008", "PLR0911", "PLR2004",
+          "PLR0912", "PLR0915"]
+
+[lint.per-file-ignores]
+"scripts/*" = ["S603", "S607", "S101"]
+"tests/*" = ["S101"]

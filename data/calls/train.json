@@ -1,0 +1,63 @@
+[
+  {
+    "id": "r01_digital_arrest",
+    "lang": "hi", "label": "scam", "lever": "authority", "source": "script",
+    "ask_t": 12.0,
+    "segments": [
+      {"t": 0.0, "text": "main police thana se bol raha hoon"},
+      {"t": 3.0, "text": "aapke khilaf ek FIR darj hai"},
+      {"t": 6.0, "text": "aapko turant arrest ho sakta hai"},
+      {"t": 9.0, "text": "kisi ko mat batana, ye confidential hai"},
+      {"t": 12.0, "text": "bail ke liye paise transfer karo aur OTP do"}
+    ]
+  },
+  {
+    "id": "r02_kyc_otp",
+    "lang": "hi", "label": "scam", "lever": "account loss", "source": "script",
+    "ask_t": 7.0,
+    "segments": [
+      {"t": 0.0, "text": "aapka KYC expire ho gaya hai"},
+      {"t": 3.0, "text": "aaj hi update karo, warna account band ho jayega"},
+      {"t": 5.0, "text": "mujhe aapka OTP aur PIN chahiye"},
+      {"t": 7.0, "text": "turant karo, der mat karo"}
+    ]
+  },
+  {
+    "id": "r03_fake_job",
+    "lang": "hi", "label": "scam", "lever": "payment", "source": "script",
+    "ask_t": 6.0,
+    "segments": [
+      {"t": 0.0, "text": "aapko job mil gayi hai, congratulation"},
+      {"t": 3.0, "text": "processing fee pay karni hogi"},
+      {"t": 6.0, "text": "card details do, warna offer cancel"}
+    ]
+  },
+  {
+    "id": "r04_bank_warning",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "aapke account me nayi transaction hui"},
+      {"t": 3.0, "text": "bank kabhi OTP nahi maangta"},
+      {"t": 6.0, "text": "kisi ko apna OTP mat batana"}
+    ]
+  },
+  {
+    "id": "r05_family_call",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "beta ghar aa gaya hai"},
+      {"t": 3.0, "text": "raat ka khana ban gaya hai"}
+    ]
+  },
+  {
+    "id": "r06_telecom_offer",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "aapka plan update hua hai"},
+      {"t": 3.0, "text": "nai speed milegi, koi fee nahi"}
+    ]
+  }
+]

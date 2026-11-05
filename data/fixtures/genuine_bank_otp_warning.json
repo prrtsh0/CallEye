@@ -1,0 +1,12 @@
+{
+  "id": "genuine_bank_otp_warning",
+  "lang": "hi",
+  "label": "genuine",
+  "source": "script",
+  "segments": [
+    {"t": 0.0, "text": "namaste, aapke bank account me ek transaction hui hai"},
+    {"t": 3.0, "text": "kisi ko bhi apna OTP mat batana"},
+    {"t": 6.2, "text": "bank kabhi bhi OTP nahi maangta"},
+    {"t": 9.4, "text": "yadi aapne ye transaction nahi kiya, humein turant bataen"}
+  ]
+}

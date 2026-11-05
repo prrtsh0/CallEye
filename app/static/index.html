@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>CallEye</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="logo">CallEye</span>
+    <span class="status-chip" id="modeChip">…</span>
+  </header>
+
+  <!-- HOME -->
+  <main id="home" class="screen">
+    <div class="hero">
+      <h1>Suspicious call? Let CallEye listen.</h1>
+      <p class="sub">Speakerphone mode. No recording is stored.</p>
+    </div>
+    <div class="lang-row">
+      <label for="lang">Language</label>
+      <select id="lang">
+        <option value="hi">Hindi</option>
+        <option value="hi-latn">Hinglish</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+    <button id="startBtn" class="big-btn">📞 Call aaya hai, sunao</button>
+    <p class="footnote">Tap to start listening. Stops automatically after 90s.</p>
+    <a class="link" href="/mic-test">Microphone test</a>
+  </main>
+
+  <!-- LISTENING -->
+  <main id="listening" class="screen hidden">
+    <div class="statusline" id="statusLine">Listening…</div>
+    <div class="meter">
+      <div class="meter-label">Pressure</div>
+      <div class="meter-track"><div class="meter-fill" id="pressureFill"></div></div>
+      <div class="meter-value" id="pressureValue">0</div>
+    </div>
+    <div class="chips" id="stageChips"></div>
+    <div class="transcript" id="transcript"></div>
+    <div class="reasons" id="reasons"></div>
+    <button id="stopBtn" class="secondary-btn">Stop</button>
+  </main>
+
+  <!-- VERDICT -->
+  <main id="verdict" class="screen hidden">
+    <div class="verdict-card" id="verdictCard">
+      <div class="verdict-level" id="verdictLevel"></div>
+      <div class="verdict-text" id="verdictText"></div>
+      <div class="verdict-reasons" id="verdictReasons"></div>
+    </div>
+    <button id="againBtn" class="secondary-btn">Listen again</button>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

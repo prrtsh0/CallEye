@@ -1,0 +1,9 @@
+{
+  "name": "CallEye",
+  "short_name": "CallEye",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f6f8",
+  "theme_color": "#1d4ed8",
+  "description": "Realtime pressure-call scam reader (speakerphone mode)."
+}

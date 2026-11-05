@@ -1,0 +1,171 @@
+# Family playbook: phrase lists for the CallEye detector.
+# Each category maps to a list of {text, weight}. Matching is case-insensitive
+# substring matching over the normalized transcript (lowercased, collapsed).
+meta:
+  name: family
+  language: hi
+
+authority:
+  - {text: "police", weight: 3.0}
+  - {text: "pulis", weight: 3.0}
+  - {text: "thana", weight: 3.0}
+  - {text: "inspector", weight: 3.0}
+  - {text: "cbi", weight: 3.5}
+  - {text: "ed office", weight: 3.5}
+  - {text: "government", weight: 2.5}
+  - {text: "court", weight: 3.0}
+  - {text: "judge", weight: 3.0}
+  - {text: "bank", weight: 2.0}
+  - {text: "bank karmachari", weight: 2.5}
+  - {text: "rbi", weight: 3.0}
+  - {text: "income tax", weight: 3.0}
+  - {text: "customs", weight: 3.0}
+  - {text: "cyber cell", weight: 3.0}
+  - {text: "digital arrest", weight: 4.0}
+  - {text: "investigation officer", weight: 3.5}
+  - {text: "kendra sarkar", weight: 2.5}
+
+fear:
+  - {text: "arrest", weight: 4.0}
+  - {text: "case darj", weight: 4.0}
+  - {text: "case", weight: 2.0}
+  - {text: "fir", weight: 3.5}
+  - {text: "block", weight: 2.5}
+  - {text: "blocked", weight: 2.5}
+  - {text: "jail", weight: 3.5}
+  - {text: "seize", weight: 3.0}
+  - {text: "frozen", weight: 3.0}
+  - {text: "freeze", weight: 3.0}
+  - {text: "suspend", weight: 2.5}
+  - {text: "account closed", weight: 3.0}
+  - {text: "legal action", weight: 3.0}
+  - {text: "penalty", weight: 2.5}
+  - {text: "notice", weight: 2.0}
+  - {text: "stop service", weight: 2.5}
+  - {text: "delisted", weight: 2.5}
+
+isolation:
+  - {text: "kisi ko mat batana", weight: 4.0}
+  - {text: "kisi ko nahi batana", weight: 4.0}
+  - {text: "don't tell anyone", weight: 4.0}
+  - {text: "do not tell anyone", weight: 4.0}
+  - {text: "between us", weight: 3.0}
+  - {text: "confidential", weight: 2.5}
+  - {text: "secret", weight: 2.0}
+  - {text: "stay on the line", weight: 3.0}
+  - {text: "don't hang up", weight: 3.0}
+  - {text: "do not hang up", weight: 3.0}
+  - {text: "don't inform family", weight: 4.0}
+  - {text: "parivaar ko mat batana", weight: 4.0}
+  - {text: "do not discuss", weight: 3.0}
+  - {text: "line pe raho", weight: 3.0}
+
+urgency:
+  - {text: "immediately", weight: 3.0}
+  - {text: "immediate", weight: 3.0}
+  - {text: "right now", weight: 3.0}
+  - {text: "abhi", weight: 2.5}
+  - {text: "turant", weight: 3.0}
+  - {text: "urgent", weight: 3.0}
+  - {text: "within 10 minutes", weight: 3.5}
+  - {text: "before it's too late", weight: 3.5}
+  - {text: "deadline", weight: 3.0}
+  - {text: "today only", weight: 2.5}
+  - {text: "aaj hi", weight: 2.5}
+  - {text: "before end of day", weight: 3.0}
+  - {text: "as soon as possible", weight: 2.5}
+  - {text: "must act now", weight: 3.0}
+  - {text: "der mat karo", weight: 3.0}
+  - {text: "time khatam", weight: 3.0}
+
+ask:
+  - {text: "otp", weight: 4.0}
+  - {text: "pin", weight: 3.0}
+  - {text: "cvv", weight: 4.0}
+  - {text: "upi pin", weight: 4.0}
+  - {text: "password", weight: 3.0}
+  - {text: "kyc update", weight: 3.0}
+  - {text: "kyc", weight: 2.0}
+  - {text: "verify", weight: 2.0}
+  - {text: "verification", weight: 2.5}
+  - {text: "account number", weight: 2.5}
+  - {text: "card number", weight: 3.0}
+  - {text: "safe account", weight: 4.0}
+  - {text: "transfer", weight: 2.0}
+  - {text: "pay", weight: 2.0}
+  - {text: "payment", weight: 2.0}
+  - {text: "deposit", weight: 2.5}
+  - {text: "advance", weight: 2.5}
+  - {text: "fee", weight: 2.0}
+  - {text: "download app", weight: 3.5}
+  - {text: "install app", weight: 3.5}
+  - {text: "screen share", weight: 3.5}
+  - {text: "remote access", weight: 3.5}
+  - {text: "details chahiye", weight: 2.5}
+  - {text: "share your", weight: 2.5}
+
+would_never:
+  - {text: "otp", weight: 4.0}
+  - {text: "pin", weight: 3.0}
+  - {text: "cvv", weight: 4.0}
+  - {text: "upi pin", weight: 4.0}
+  - {text: "password", weight: 3.0}
+  - {text: "remote control app", weight: 4.0}
+  - {text: "remote access", weight: 4.0}
+  - {text: "safe account", weight: 4.0}
+  - {text: "pay to avoid arrest", weight: 4.5}
+  - {text: "video call", weight: 2.5}
+  - {text: "money to settle case", weight: 4.5}
+
+money_demand:
+  - {text: "transfer", weight: 2.5}
+  - {text: "pay", weight: 2.5}
+  - {text: "payment", weight: 2.5}
+  - {text: "deposit", weight: 2.5}
+  - {text: "send money", weight: 3.0}
+  - {text: "advance", weight: 2.5}
+  - {text: "fee", weight: 2.0}
+  - {text: "processing fee", weight: 3.0}
+  - {text: "bail", weight: 3.5}
+  - {text: "settle", weight: 3.0}
+  - {text: "safe account", weight: 3.5}
+
+warning_cues:
+  - {text: "mat", weight: 1.0}
+  - {text: "nahi", weight: 1.0}
+  - {text: "never", weight: 1.0}
+  - {text: "do not", weight: 1.0}
+  - {text: "don't", weight: 1.0}
+  - {text: "dont", weight: 1.0}
+  - {text: "kabhi nahi", weight: 1.5}
+  - {text: "kabhi bhi", weight: 1.0}
+  - {text: "avoid", weight: 1.0}
+  - {text: "nahi maangta", weight: 1.5}
+  - {text: "will never", weight: 1.5}
+  - {text: "zabardasti", weight: 1.5}
+
+reward:
+  - {text: "lottery", weight: 3.0}
+  - {text: "prize", weight: 3.0}
+  - {text: "jeeta", weight: 3.0}
+  - {text: "mubarak", weight: 2.5}
+  - {text: "winner", weight: 3.0}
+  - {text: "jackpot", weight: 3.0}
+
+emergency:
+  - {text: "injured", weight: 3.0}
+  - {text: "accident", weight: 3.0}
+  - {text: "kidnapped", weight: 4.0}
+  - {text: "kidnap", weight: 4.0}
+  - {text: "arrested", weight: 4.0}
+  - {text: "admitted", weight: 3.0}
+  - {text: "hurt", weight: 3.0}
+  - {text: "chot", weight: 3.0}
+  - {text: "bharti hai", weight: 3.0}
+  - {text: "loved one", weight: 3.0}
+  - {text: "your son", weight: 3.0}
+  - {text: "your daughter", weight: 3.0}
+  - {text: "your relative", weight: 3.0}
+  - {text: "aapka beta", weight: 3.0}
+  - {text: "aapki beti", weight: 3.0}
+  - {text: "aapka bacha", weight: 3.0}

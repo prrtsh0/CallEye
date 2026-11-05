@@ -1,0 +1,32 @@
+# Student playbook: extra/interview/job-scam phrases layered on top of family.
+meta:
+  name: student
+  language: hi
+
+authority:
+  - {text: "hr manager", weight: 2.5}
+  - {text: "recruiter", weight: 2.0}
+
+urgency:
+  - {text: "last seat", weight: 3.0}
+  - {text: "limited seats", weight: 3.0}
+  - {text: "closing soon", weight: 3.0}
+  - {text: "only today", weight: 2.5}
+
+ask:
+  - {text: "processing fee", weight: 3.0}
+  - {text: "registration fee", weight: 3.0}
+  - {text: "interview fee", weight: 3.0}
+  - {text: "training fee", weight: 3.0}
+  - {text: "stipend refund", weight: 3.0}
+  - {text: "security deposit", weight: 3.0}
+
+money_demand:
+  - {text: "registration fee", weight: 3.0}
+  - {text: "interview fee", weight: 3.0}
+  - {text: "training fee", weight: 3.0}
+  - {text: "deposit", weight: 2.5}
+
+would_never:
+  - {text: "processing fee for job", weight: 4.0}
+  - {text: "registration fee", weight: 3.5}

@@ -1,0 +1,131 @@
+[
+  {
+    "id": "t01_digital_arrest",
+    "lang": "hi", "label": "scam", "lever": "authority", "source": "script",
+    "ask_t": 13.0,
+    "segments": [
+      {"t": 0.0, "text": "namaste, main police station se bol raha hoon"},
+      {"t": 3.0, "text": "aapke naam par ek case darj hua hai"},
+      {"t": 6.0, "text": "ye bahut serious hai, aapko arrest ho sakta hai"},
+      {"t": 9.0, "text": "kisi ko nahi batana, warna case aur badhega"},
+      {"t": 12.0, "text": "aapko abhi ek payment karni hogi bail ke liye"},
+      {"t": 13.0, "text": "mujhe aapka OTP chahiye verify karne ke liye"},
+      {"t": 16.0, "text": "turant karo, koi der mat karo"}
+    ]
+  },
+  {
+    "id": "t02_kyc_block",
+    "lang": "hi", "label": "scam", "lever": "account loss", "source": "script",
+    "ask_t": 9.0,
+    "segments": [
+      {"t": 0.0, "text": "aapke KYC update karne ka time aa gaya hai"},
+      {"t": 3.0, "text": "aapka account aaj block ho jayega agar update nahi kiya"},
+      {"t": 6.0, "text": "mujhe aapka OTP aur card details chahiye"},
+      {"t": 9.0, "text": "aaj hi karna hai, kal der ho jayegi"}
+    ]
+  },
+  {
+    "id": "t03_fake_job_fee",
+    "lang": "hi", "label": "scam", "lever": "payment", "source": "script",
+    "ask_t": 8.0,
+    "segments": [
+      {"t": 0.0, "text": "aapko company me job mil gayi hai"},
+      {"t": 3.0, "text": "job ke liye ek processing fee bharni hogi"},
+      {"t": 6.0, "text": "mujhe aapka CVV aur debit card details chahiye"},
+      {"t": 8.0, "text": "aaj hi fee pay karo, warna offer cancel ho jayega"}
+    ]
+  },
+  {
+    "id": "t04_otp_fraud",
+    "lang": "hi", "label": "scam", "lever": "account loss", "source": "script",
+    "ask_t": 5.0,
+    "segments": [
+      {"t": 0.0, "text": "main bank ka karmachari hoon"},
+      {"t": 2.5, "text": "aapke account me suspicious activity hai"},
+      {"t": 5.0, "text": "mujhe aapka OTP bhejo verify karne ke liye"},
+      {"t": 8.0, "text": "turant karo, warna account suspend ho jayega"}
+    ]
+  },
+  {
+    "id": "t05_lottery_prize",
+    "lang": "hi", "label": "scam", "lever": "reward", "source": "script",
+    "ask_t": 7.0,
+    "segments": [
+      {"t": 0.0, "text": "mubarak ho, aapne lottery jeeta hai"},
+      {"t": 3.0, "text": "prize paane ke liye ek chhoti si fee pay karni hogi"},
+      {"t": 6.0, "text": "aaj hi payment karo, warna prize khatam ho jayega"},
+      {"t": 7.0, "text": "mujhe aapka account number chahiye"}
+    ]
+  },
+  {
+    "id": "t06_relatives_emergency",
+    "lang": "hi", "label": "scam", "lever": "emergency", "source": "script",
+    "ask_t": 10.0,
+    "segments": [
+      {"t": 0.0, "text": "aapke bete ko accident ho gaya hai"},
+      {"t": 3.5, "text": "wo hospital me bharti hai, jaldi karo"},
+      {"t": 7.0, "text": "kisi ko nahi batana, main police hoon"},
+      {"t": 10.0, "text": "bail ke liye turant paise transfer karo"}
+    ]
+  },
+  {
+    "id": "g01_bank_otp_warning",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "namaste, aapke bank account me ek transaction hui hai"},
+      {"t": 3.0, "text": "kisi ko bhi apna OTP mat batana"},
+      {"t": 6.0, "text": "bank kabhi bhi OTP nahi maangta"},
+      {"t": 9.0, "text": "yadi aapne ye transaction nahi kiya, humein turant bataen"}
+    ]
+  },
+  {
+    "id": "g02_delivery",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "aapka parcel delivery ke liye aa raha hai"},
+      {"t": 3.0, "text": "kripya apna address confirm karein"},
+      {"t": 6.0, "text": "kal suraj nikalne ke baad milega"}
+    ]
+  },
+  {
+    "id": "g03_family",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "beta abhi school se wapas aa gaya hai"},
+      {"t": 3.0, "text": "shaam ko dinner pe milte hain"}
+    ]
+  },
+  {
+    "id": "g04_hospital_emergency",
+    "lang": "hi", "label": "genuine", "lever": "emergency", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "ham hospital se bol rahe hain"},
+      {"t": 3.0, "text": "aapke bete ko chot lagi hai, jaldi aaiye"},
+      {"t": 6.0, "text": "kabhi bhi paise nahi maangte, sirf aaiye"}
+    ]
+  },
+  {
+    "id": "g05_telecom",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "aapka plan upgrade ho gaya hai"},
+      {"t": 3.0, "text": "nai speed aur free data milega"},
+      {"t": 6.0, "text": "kisi bhi payment ki zaroorat nahi hai"}
+    ]
+  },
+  {
+    "id": "g06_school_meeting",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "school se phone aaya hai"},
+      {"t": 3.0, "text": "kal parents meeting hai shaam ko"},
+      {"t": 6.0, "text": "aapka attendance important hai"}
+    ]
+  }
+]

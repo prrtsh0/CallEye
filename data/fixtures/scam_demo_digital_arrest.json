@@ -1,0 +1,15 @@
+{
+  "id": "scam_demo_digital_arrest",
+  "lang": "hi",
+  "label": "scam",
+  "source": "script",
+  "segments": [
+    {"t": 0.0, "text": "namaste, main police station se bol raha hoon"},
+    {"t": 3.2, "text": "aapke naam par ek case darj hua hai"},
+    {"t": 6.5, "text": "ye bahut serious hai, aapko arrest ho sakta hai"},
+    {"t": 9.8, "text": "kisi ko nahi batana, warna case aur badhega"},
+    {"t": 13.0, "text": "aapko abhi ek payment karni hogi bail ke liye"},
+    {"t": 16.5, "text": "mujhe aapka OTP chahiye verify karne ke liye"},
+    {"t": 19.8, "text": "turant karo, koi der mat karo"}
+  ]
+}

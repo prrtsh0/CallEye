@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CallEye — Microphone test</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="mictest">
+    <h1>Microphone test</h1>
+    <p>Play a normal call on speaker. The level meter should move when the caller talks.</p>
+    <div class="meter big">
+      <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+      <div class="meter-value" id="meterValue">0</div>
+    </div>
+    <button id="toggleBtn" class="btn">Start test</button>
+    <p id="status">Idle</p>
+    <script>
+      const fill = document.getElementById("meterFill");
+      const value = document.getElementById("meterValue");
+      const status = document.getElementById("status");
+      const btn = document.getElementById("toggleBtn");
+      let ctx = null, stream = null, analyser = null, raf = null, running = false;
+
+      async function start() {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true } });
+        } catch (e) { status.textContent = "Error: " + e.message; return; }
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const src = ctx.createMediaStreamSource(stream);
+        analyser = ctx.createAnalyser();
+        analyser.fftSize = 512;
+        src.connect(analyser);
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        function loop() {
+          analyser.getByteTimeDomainData(data);
+          let sum = 0;
+          for (let i = 0; i < data.length; i++) { const d = data[i] - 128; sum += d * d; }
+          const rms = Math.sqrt(sum / data.length);
+          const level = Math.min(100, (rms / 60) * 100);
+          fill.style.width = level + "%";
+          value.textContent = Math.round(level);
+          raf = requestAnimationFrame(loop);
+        }
+        loop();
+        running = true;
+        btn.textContent = "Stop";
+        status.textContent = "Listening…";
+      }
+
+      function stop() {
+        if (raf) cancelAnimationFrame(raf);
+        if (stream) stream.getTracks().forEach(t => t.stop());
+        if (ctx) ctx.close();
+        stream = null; ctx = null; running = false;
+        btn.textContent = "Start test";
+        status.textContent = "Stopped";
+        fill.style.width = "0%";
+      }
+
+      btn.addEventListener("click", () => (running ? stop() : start()));
+    </script>
+  </main>
+</body>
+</html>
