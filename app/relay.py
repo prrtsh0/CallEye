@@ -33,6 +33,16 @@ class RelayHandler:
             item = await queue.get()
             await self.ws.send_text(item)
 
+    async def _pump_mock(self, agen) -> None:
+        """Advance the self-timed mock STT generator until it finishes."""
+        try:
+            async for _ in agen:
+                pass
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            pass
+
     async def run(self) -> None:
         await self.ws.accept()
         queue: asyncio.Queue = asyncio.Queue()
@@ -98,6 +108,13 @@ class RelayHandler:
         except StopAsyncIteration:
             pass
 
+        # In mock mode the replay is self-timed: advance it on its own so the
+        # demo works even before/without microphone audio. Live mode is driven by
+        # the frames the browser sends.
+        pump_task = None
+        if self.settings.effective_mode == "mock":
+            pump_task = asyncio.create_task(self._pump_mock(agen))
+
         try:
             while True:
                 # 4) Budget check.
@@ -119,11 +136,15 @@ class RelayHandler:
                         break
                     continue
                 if msg["type"] == "websocket.receive_bytes":
-                    try:
-                        await agen.asend(msg["bytes"])
-                    except StopAsyncIteration:
-                        pass
+                    # Forward audio frames only in live mode (mock ignores them).
+                    if pump_task is None:
+                        try:
+                            await agen.asend(msg["bytes"])
+                        except StopAsyncIteration:
+                            pass
         finally:
+            if pump_task is not None:
+                pump_task.cancel()
             try:
                 await agen.aclose()
             except Exception:

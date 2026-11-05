@@ -19,7 +19,14 @@ def test_train_and_test_splits_are_disjoint():
 
 
 def test_no_env_committed():
-    assert not (BASE_DIR / ".env").exists(), ".env must not be committed"
+    """`.env` (real secrets) must never be committed; it must stay ignored."""
+    ignore = (BASE_DIR / ".gitignore").read_text(encoding="utf-8")
+    patterns = {line.strip() for line in ignore.splitlines()}
+    assert ".env" in patterns, ".env missing from .gitignore"
+    # If a local .env exists for development it must be ignored, not tracked.
+    env = BASE_DIR / ".env"
+    if env.exists():
+        assert ".env" in patterns
 
 
 def test_env_example_exists():

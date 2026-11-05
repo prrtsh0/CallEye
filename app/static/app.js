@@ -49,6 +49,7 @@
   let stream = null;
   let node = null;
   let currentLevel = "green";
+  let APP_MODE = "mock";
 
   // ---- local settings ----
   function loadSettings() {
@@ -79,6 +80,7 @@
     try {
       const res = await fetch("/api/config");
       const cfg = await res.json();
+      APP_MODE = cfg.mode || "mock";
       els.modeChip.textContent = cfg.live_mode ? "Live" : "Mock mode";
       return cfg;
     } catch (e) {
@@ -259,15 +261,26 @@
         video: false,
       });
     } catch (e) {
-      els.statusLine.textContent = "Microphone unavailable: " + e.message;
-      return;
+      if (APP_MODE !== "mock") {
+        els.statusLine.textContent = "Microphone unavailable: " + e.message;
+        return;
+      }
+      // Mock mode needs no mic: continue without audio capture.
+      stream = null;
     }
 
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    await audioCtx.audioWorklet.addModule("/audio-processor.js");
-    node = new AudioWorkletNode(audioCtx, "downsampler-processor");
-    const source = audioCtx.createMediaStreamSource(stream);
-    source.connect(node);
+    if (stream) {
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        await audioCtx.audioWorklet.addModule("/audio-processor.js");
+        node = new AudioWorkletNode(audioCtx, "downsampler-processor");
+        const source = audioCtx.createMediaStreamSource(stream);
+        source.connect(node);
+      } catch (e) {
+        // Audio capture is best-effort; mock mode still works without it.
+        node = null;
+      }
+    }
 
     const proto = location.protocol === "https:" ? "wss:" : "ws:";
     const wsUrl = proto + "//" + location.host + "/ws/listen";
@@ -286,9 +299,11 @@
     }));
     els.statusLine.textContent = "Listening… (on speaker)";
 
-    node.port.onmessage = (ev) => {
-      if (ws && ws.readyState === WebSocket.OPEN) ws.send(ev.data);
-    };
+    if (node) {
+      node.port.onmessage = (ev) => {
+        if (ws && ws.readyState === WebSocket.OPEN) ws.send(ev.data);
+      };
+    }
 
     ws.onmessage = (ev) => {
       if (typeof ev.data !== "string") return;
