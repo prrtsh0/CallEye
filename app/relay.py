@@ -33,7 +33,7 @@ class RelayHandler:
             item = await queue.get()
             await self.ws.send_text(item)
 
-    async def _pump_mock(self, agen) -> None:
+    async def _pump_mock(self, agen, queue) -> None:
         """Advance the self-timed mock STT generator until it finishes."""
         try:
             async for _ in agen:
@@ -42,6 +42,12 @@ class RelayHandler:
             raise
         except Exception:
             pass
+        finally:
+            # Signal the browser that the mock call has completed.
+            await self._send(queue, {
+                "type": "finished",
+                "level": self.analyzer.decision.label,
+            })
 
     async def run(self) -> None:
         await self.ws.accept()
@@ -113,7 +119,7 @@ class RelayHandler:
         # the frames the browser sends.
         pump_task = None
         if self.settings.effective_mode == "mock":
-            pump_task = asyncio.create_task(self._pump_mock(agen))
+            pump_task = asyncio.create_task(self._pump_mock(agen, queue))
 
         try:
             while True:

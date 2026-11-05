@@ -316,6 +316,9 @@
         stopListening(true);
       } else if (msg.type === "budget") {
         els.statusLine.textContent = "Time left: " + msg.seconds_left + "s";
+      } else if (msg.type === "finished") {
+        els.statusLine.textContent = "Call ended";
+        finishDemo();
       }
     };
 
@@ -329,6 +332,33 @@
     if (stream) { stream.getTracks().forEach((t) => t.stop()); stream = null; }
     if (audioCtx) { try { audioCtx.close(); } catch (e) {} audioCtx = null; }
     if (!silent) showVerdict(false);
+  }
+
+  function teardownCapture() {
+    if (ws) { try { ws.close(); } catch (e) {} ws = null; }
+    if (node) { try { node.disconnect(); } catch (e) {} node = null; }
+    if (stream) { stream.getTracks().forEach((t) => t.stop()); stream = null; }
+    if (audioCtx) { try { audioCtx.close(); } catch (e) {} audioCtx = null; }
+  }
+
+  function showVerdictForce(level) {
+    const lvl = level || "amber";
+    els.verdictCard.className = "verdict-card " + lvl;
+    els.verdictLevel.textContent =
+      lvl === "red" ? "🔴 Hang up" : lvl === "amber" ? "🟠 Careful" : "🟢 No warning signs so far";
+    els.verdictText.textContent =
+      lvl === "red" ? "Hang up. Your guardian has been told."
+      : lvl === "amber" ? "Careful. Check before you act."
+      : "No warning signs so far. Check the caller calmly.";
+    els.verdictReasons.textContent = els.reasons.textContent;
+    showScreen("verdict");
+  }
+
+  function finishDemo() {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      try { ws.send(JSON.stringify({ type: "stop" })); } catch (e) {}
+    }
+    setTimeout(() => { teardownCapture(); showVerdictForce(currentLevel); }, 150);
   }
 
   // ---- events ----

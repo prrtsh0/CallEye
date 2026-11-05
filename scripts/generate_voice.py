@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import hashlib
 import json
 import os
 import sys
@@ -47,8 +46,8 @@ async def main() -> None:
         out = AUDIO_DIR / rel
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_bytes(audio.data)
-        manifest[f"{lang}/{clip_id}"] = rel
-        manifest[f"{lang}/{clip_id}.hash"] = hashlib.sha256(audio.data).hexdigest()
+        # Public URL the browser uses to fetch the clip (manifest key = "lang/level").
+        manifest[f"{lang}/{clip_id}"] = f"/audio/{rel}"
 
     (AUDIO_DIR / "manifest.json").write_text(
         json.dumps(manifest, indent=2), encoding="utf-8")
