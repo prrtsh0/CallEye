@@ -10,7 +10,7 @@
     setup: $("#setup"),
     modeChip: $("#modeChip"),
     setupBtn: $("#setupBtn"),
-    setupLink: $("#setupLink"),
+
     startBtn: $("#startBtn"),
     stopBtn: $("#stopBtn"),
     againBtn: $("#againBtn"),
@@ -42,6 +42,10 @@
     addContactBtn: $("#addContactBtn"),
     saveSetupBtn: $("#saveSetupBtn"),
     voice: $("#voice"),
+    landing: $("#landing"),
+    scenarioBar: $("#scenarioBar"),
+    verdictScenario: $("#verdictScenario"),
+    brandBtn: $("#brandBtn"),
   };
 
   let ws = null;
@@ -50,6 +54,20 @@
   let node = null;
   let currentLevel = "green";
   let APP_MODE = "mock";
+  let currentScenario = null;
+
+  const SCENARIOS = {
+    scam: {
+      fixture: "scam_demo_digital_arrest",
+      title: "Digital-arrest call — scripted demo",
+      expect: "Red: hang up.",
+    },
+    genuine: {
+      fixture: "genuine_bank_otp_warning",
+      title: "Genuine bank call — scripted demo",
+      expect: "Green: no warning signs.",
+    },
+  };
 
   // ---- local settings ----
   function loadSettings() {
@@ -72,7 +90,7 @@
   }
 
   function showScreen(name) {
-    ["home", "listening", "verdict", "setup"].forEach((s) => els[s].classList.add("hidden"));
+    ["landing", "listening", "verdict", "setup"].forEach((s) => els[s].classList.add("hidden"));
     els[name].classList.remove("hidden");
   }
 
@@ -149,7 +167,7 @@
     };
     saveSettings(settings);
     localStorage.setItem("calleye.invite", els.inviteInput.value.trim());
-    showScreen("home");
+    showScreen("landing");
   }
 
   // ---- transcript / analysis ----
@@ -229,7 +247,7 @@
     const level = currentLevel;
 
     if (silent || level === "green") {
-      showScreen("home");
+      showScreen("landing");
       return;
     }
     showScreen("verdict");
@@ -245,7 +263,7 @@
   }
 
   // ---- listening ----
-  async function startListening() {
+  async function startListening(scenario) {
     await fetchConfig();
     showScreen("listening");
     els.transcript.innerHTML = "";
@@ -254,6 +272,20 @@
     els.pressureValue.textContent = "0";
     els.statusLine.textContent = "Starting…";
     currentLevel = "green";
+    currentScenario = scenario || null;
+
+    if (scenario) {
+      els.scenarioBar.innerHTML =
+        "<strong>" + scenario.title + "</strong>" +
+        " &nbsp;·&nbsp; expected: " + scenario.expect;
+      els.scenarioBar.style.display = "";
+    } else if (APP_MODE === "mock") {
+      els.scenarioBar.innerHTML =
+        "<strong>Example call</strong> — scripted demo (digital-arrest pattern)";
+      els.scenarioBar.style.display = "";
+    } else {
+      els.scenarioBar.style.display = "none";
+    }
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -291,12 +323,16 @@
       ws.onerror = () => reject(new Error("connection failed"));
     });
 
-    ws.send(JSON.stringify({
+    const payload = {
       type: "start",
       lang: els.lang.value,
       code: localStorage.getItem("calleye.invite") || "",
       device_id: getDeviceId(),
-    }));
+    };
+    // Mock mode: pick the replay fixture (scam vs genuine) for the demo.
+    if (scenario && scenario.fixture) payload.fixture = scenario.fixture;
+    else if (APP_MODE === "mock") payload.fixture = "scam_demo_digital_arrest";
+    ws.send(JSON.stringify(payload));
     els.statusLine.textContent = "Listening… (on speaker)";
 
     if (node) {
@@ -351,7 +387,15 @@
       : lvl === "amber" ? "Careful. Check before you act."
       : "No warning signs so far. Check the caller calmly.";
     els.verdictReasons.textContent = els.reasons.textContent;
+    els.verdictScenario.textContent = currentScenario
+      ? currentScenario.title + " · expected: " + currentScenario.expect
+      : (APP_MODE === "mock" ? "Example call — scripted demo" : "");
     showScreen("verdict");
+  }
+
+  function beginScenario(key) {
+    const s = SCENARIOS[key];
+    if (s) startListening(s);
   }
 
   function finishDemo() {
@@ -362,12 +406,20 @@
   }
 
   // ---- events ----
-  els.startBtn.addEventListener("click", startListening);
+  els.startBtn.addEventListener("click", () => startListening(null));
   els.stopBtn.addEventListener("click", () => stopListening(false));
-  els.againBtn.addEventListener("click", () => showScreen("home"));
+  els.againBtn.addEventListener("click", () => showScreen("landing"));
+  els.brandBtn.addEventListener("click", () => showScreen("landing"));
+  document.querySelectorAll(".run-demo").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".scenario-card");
+      const key = card && card.getAttribute("data-scenario");
+      if (key) beginScenario(key);
+    });
+  });
   els.sunaoBtn.addEventListener("click", () => playVoice(currentLevel || "green"));
   els.setupBtn.addEventListener("click", () => { renderSetup(); showScreen("setup"); });
-  els.setupLink.addEventListener("click", () => { renderSetup(); showScreen("setup"); });
+
   els.saveSetupBtn.addEventListener("click", saveSetup);
   els.addContactBtn.addEventListener("click", () => addContactRow("", ""));
   els.safeWordBtn.addEventListener("click", () => {

@@ -73,6 +73,12 @@ class RelayHandler:
         code = start.get("code")
         device_id = start.get("device_id", "")
 
+        # Mock mode can replay a chosen fixture (e.g. a scam vs a genuine call)
+        # so the landing-page demo can show the difference. Ignored in live mode.
+        if self.settings.effective_mode == "mock" and hasattr(self.stt, "select_fixture"):
+            fixture = start.get("fixture") or "scam_demo_digital_arrest"
+            self.stt.select_fixture(str(fixture))
+
         # 2) Abuse guards.
         if not self.guard.check_invite(code):
             await self.ws.send_text(json.dumps({"type": "error", "code": "invite_required"}))

@@ -22,6 +22,11 @@ class MockSTTAdapter(STTAdapter):
         self.fixture = fixture or DEFAULT_FIXTURE
         self._segments = self._load(self.fixture)
 
+    def select_fixture(self, name: str) -> None:
+        """Switch the mock replay to a different recorded transcript."""
+        self.fixture = name or DEFAULT_FIXTURE
+        self._segments = self._load(self.fixture)
+
     @staticmethod
     def _load(name: str) -> list[TranscriptSegment]:
         path = FIXTURES_DIR / f"{name}.json"
