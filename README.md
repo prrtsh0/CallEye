@@ -10,7 +10,7 @@ red it guides the user to a guardian.
 > be wrong. It is **not** a substitute for verifying through official channels,
 > and it cannot answer, mute, record, or hang up a call.
 
-![CI](https://github.com/priteshshukla/calleye/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/prrtsh0/CallEye/actions/workflows/ci.yml/badge.svg)
 
 ---
 
