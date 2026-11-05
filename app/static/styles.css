@@ -95,3 +95,36 @@ body {
 .meter.big .meter-track { height: 22px; }
 .btn { padding: 12px 16px; border: none; border-radius: 10px; background: var(--brand); color: #fff; font-size: 15px; cursor: pointer; }
 .btn.rec { background: var(--red); }
+
+/* header */
+.top-actions { display: flex; align-items: center; gap: 8px; }
+.icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
+
+/* links / misc */
+.home-links { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; text-align: center; }
+.link-btn { background: none; border: none; color: var(--brand); font-size: 15px; cursor: pointer; padding: 0; }
+.listen-actions { display: flex; gap: 10px; margin-top: 16px; }
+.listen-actions .secondary-btn { margin-top: 0; }
+
+/* verify-first */
+.verify { background: var(--card); border-radius: var(--radius); padding: 18px; margin-top: 14px; border: 2px solid var(--amber); }
+.verify h2, .guardian h2 { margin: 0 0 6px; font-size: 18px; }
+.trusted-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.trusted-list .btn { text-align: left; }
+.verify-actions { display: flex; flex-direction: column; gap: 8px; }
+.btn.emergency { background: var(--red); }
+
+/* guardian */
+.guardian { background: var(--card); border-radius: var(--radius); padding: 18px; margin-top: 14px; border: 2px solid var(--red); }
+.guardian .btn { display: block; text-align: center; margin-top: 10px; text-decoration: none; }
+
+/* setup */
+.setup-section { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
+.setup-section h2 { margin: 0 0 6px; font-size: 16px; }
+.setup-section label { display: block; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.setup-section input { width: 100%; margin-top: 4px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 15px; }
+#contactRows { display: flex; flex-direction: column; gap: 10px; }
+.contact-row { display: flex; gap: 8px; align-items: center; }
+.contact-row input { flex: 1; }
+.contact-row .btn { background: var(--muted); }
+#safeWordMsg { font-size: 13px; color: var(--muted); }

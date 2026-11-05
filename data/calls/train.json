@@ -59,5 +59,131 @@
       {"t": 0.0, "text": "aapka plan update hua hai"},
       {"t": 3.0, "text": "nai speed milegi, koi fee nahi"}
     ]
+  },
+  {
+    "id": "r07_digital_arrest_family",
+    "lang": "hi", "label": "scam", "lever": "authority", "source": "script",
+    "ask_t": 11.0,
+    "segments": [
+      {"t": 0.0, "text": "main investigation officer bol raha hoon"},
+      {"t": 3.0, "text": "aapke bete ke khilaf case hai"},
+      {"t": 6.0, "text": "aapko arrest ho jayega agar turant nahi action"},
+      {"t": 9.0, "text": "kisi ko nahi batana, warna badhega"},
+      {"t": 11.0, "text": "jail se bachne ke liye pay karo aur OTP do"}
+    ]
+  },
+  {
+    "id": "r08_sim_block",
+    "lang": "hi", "label": "scam", "lever": "authority", "source": "script",
+    "ask_t": 8.0,
+    "segments": [
+      {"t": 0.0, "text": "aapka SIM number aaj block ho jayega"},
+      {"t": 3.0, "text": "karnataka cyber cell se bol rahe hain"},
+      {"t": 6.0, "text": "aapka OTP chahiye reactivate karne ke liye"},
+      {"t": 8.0, "text": "turant karo warna account permanently blocked"}
+    ]
+  },
+  {
+    "id": "r09_parcel_courier",
+    "lang": "hi", "label": "scam", "lever": "authority", "source": "script",
+    "ask_t": 9.0,
+    "segments": [
+      {"t": 0.0, "text": "aapke naam par ek parcel pakda gaya hai"},
+      {"t": 3.0, "text": "usme drugs mile hain, police case banega"},
+      {"t": 6.0, "text": "kisi ko nahi batana, ye investigation hai"},
+      {"t": 9.0, "text": "release ke liye fine pay karo aur card details do"}
+    ]
+  },
+  {
+    "id": "r10_bank_kyc_otp",
+    "lang": "hi", "label": "scam", "lever": "account loss", "source": "script",
+    "ask_t": 7.0,
+    "segments": [
+      {"t": 0.0, "text": "bank se bol rahe hain, aapka KYC fail hua"},
+      {"t": 3.0, "text": "account aaj freeze ho jayega"},
+      {"t": 5.0, "text": "mujhe aapka OTP aur PIN chahiye"},
+      {"t": 7.0, "text": "abhi karo, warna account band"}
+    ]
+  },
+  {
+    "id": "r11_video_call_authority",
+    "lang": "hi", "label": "scam", "lever": "authority", "source": "script",
+    "ask_t": 10.0,
+    "segments": [
+      {"t": 0.0, "text": "hum court ke adesh par aap se video call par baat karenge"},
+      {"t": 4.0, "text": "aapko case me pid kiya gaya hai"},
+      {"t": 7.0, "text": "kisi ko nahi batana, warna arrest"},
+      {"t": 10.0, "text": "bail ke liye paise transfer karo, OTP do"}
+    ]
+  },
+  {
+    "id": "r12_rental_advance",
+    "lang": "hi", "label": "scam", "lever": "payment", "source": "script",
+    "ask_t": 8.0,
+    "segments": [
+      {"t": 0.0, "text": "aapko flat milega sirf aaj"},
+      {"t": 3.0, "text": "advance aaj hi pay karna hoga"},
+      {"t": 6.0, "text": "aapka account number do transfer ke liye"},
+      {"t": 8.0, "text": "zaroori hai, kal nahi milega"}
+    ]
+  },
+  {
+    "id": "g07_bank_official_notice",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "bank ke nimitt se soochana"},
+      {"t": 3.0, "text": "aapki statement update ho gayi hai"},
+      {"t": 6.0, "text": "kisi ko OTP mat dena, bank nahi maangta"}
+    ]
+  },
+  {
+    "id": "g08_delivery_update",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "aapka order bhej diya gaya hai"},
+      {"t": 3.0, "text": "kal delivery hogi"},
+      {"t": 6.0, "text": "koi payment nahi chahiye"}
+    ]
+  },
+  {
+    "id": "g09_hospital_injury_note",
+    "lang": "hi", "label": "genuine", "lever": "emergency", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "hum hospital se bol rahe hain"},
+      {"t": 3.0, "text": "aapki beti ko chot lagi hai"},
+      {"t": 6.0, "text": "aaiye, kabhi paise nahi maangte call par"}
+    ]
+  },
+  {
+    "id": "g10_school_phone",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "vidyalaya se phone"},
+      {"t": 3.0, "text": "parents meeting shaam ko"},
+      {"t": 6.0, "text": "aapki upasthiti important hai"}
+    ]
+  },
+  {
+    "id": "g11_family_normal",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "didi tum kab aa rahi ho"},
+      {"t": 3.0, "text": "khaana ban gaya hai"}
+    ]
+  },
+  {
+    "id": "g12_telecom_upgrade",
+    "lang": "hi", "label": "genuine", "lever": "none", "source": "script",
+    "ask_t": null,
+    "segments": [
+      {"t": 0.0, "text": "aapka internet plan upgrade hua"},
+      {"t": 3.0, "text": "nai speed milegi"},
+      {"t": 6.0, "text": "kisi bhi payment ki zaroorat nahi"}
+    ]
   }
 ]

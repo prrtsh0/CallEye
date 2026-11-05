@@ -1,0 +1,12 @@
+{
+  "hi/greeting": "hi/greeting.wav",
+  "hi/greeting.hash": "42be91ab46fb894967ec63011dc03c5a27261883fa0db8d57e1e3769614c5951",
+  "hi/green": "hi/green.wav",
+  "hi/green.hash": "42be91ab46fb894967ec63011dc03c5a27261883fa0db8d57e1e3769614c5951",
+  "hi/amber": "hi/amber.wav",
+  "hi/amber.hash": "42be91ab46fb894967ec63011dc03c5a27261883fa0db8d57e1e3769614c5951",
+  "hi/red": "hi/red.wav",
+  "hi/red.hash": "42be91ab46fb894967ec63011dc03c5a27261883fa0db8d57e1e3769614c5951",
+  "hi/verify": "hi/verify.wav",
+  "hi/verify.hash": "42be91ab46fb894967ec63011dc03c5a27261883fa0db8d57e1e3769614c5951"
+}

@@ -7,11 +7,16 @@
     home: $("#home"),
     listening: $("#listening"),
     verdict: $("#verdict"),
+    setup: $("#setup"),
     modeChip: $("#modeChip"),
+    setupBtn: $("#setupBtn"),
+    setupLink: $("#setupLink"),
     startBtn: $("#startBtn"),
     stopBtn: $("#stopBtn"),
     againBtn: $("#againBtn"),
+    sunaoBtn: $("#sunaoBtn"),
     lang: $("#lang"),
+    inviteInput: $("#inviteInput"),
     statusLine: $("#statusLine"),
     pressureFill: $("#pressureFill"),
     pressureValue: $("#pressureValue"),
@@ -22,13 +27,40 @@
     verdictLevel: $("#verdictLevel"),
     verdictText: $("#verdictText"),
     verdictReasons: $("#verdictReasons"),
+    verifyPanel: $("#verifyPanel"),
+    verifyHint: $("#verifyHint"),
+    trustedList: $("#trustedList"),
+    call112: $("#call112"),
+    safeWordBtn: $("#safeWordBtn"),
+    safeWordMsg: $("#safeWordMsg"),
+    guardianPanel: $("#guardianPanel"),
+    guardianName: $("#guardianName"),
+    guardianLink: $("#guardianLink"),
+    gName: $("#gName"),
+    gPhone: $("#gPhone"),
+    contactRows: $("#contactRows"),
+    addContactBtn: $("#addContactBtn"),
+    saveSetupBtn: $("#saveSetupBtn"),
+    voice: $("#voice"),
   };
 
   let ws = null;
   let audioCtx = null;
   let stream = null;
   let node = null;
+  let currentLevel = "green";
 
+  // ---- local settings ----
+  function loadSettings() {
+    try {
+      return JSON.parse(localStorage.getItem("calleye.settings")) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+  function saveSettings(s) {
+    localStorage.setItem("calleye.settings", JSON.stringify(s));
+  }
   function getDeviceId() {
     let id = localStorage.getItem("calleye.device");
     if (!id) {
@@ -39,7 +71,7 @@
   }
 
   function showScreen(name) {
-    ["home", "listening", "verdict"].forEach((s) => els[s].classList.add("hidden"));
+    ["home", "listening", "verdict", "setup"].forEach((s) => els[s].classList.add("hidden"));
     els[name].classList.remove("hidden");
   }
 
@@ -55,6 +87,70 @@
     }
   }
 
+  // ---- voice clips (pre-generated at build time) ----
+  let voiceManifest = null;
+  async function loadVoiceManifest() {
+    try {
+      const res = await fetch("/audio/manifest.json");
+      voiceManifest = await res.json();
+    } catch (e) {
+      voiceManifest = {};
+    }
+  }
+  function playVoice(level) {
+    const lang = els.lang.value || "hi";
+    const key = lang + "/" + level;
+    let src = voiceManifest && voiceManifest[key];
+    if (!src) src = `/audio/${lang}/${level}.mp3`; // live-mode fallback
+    els.voice.src = src;
+    els.voice.play().catch(() => {});
+  }
+
+  // ---- setup UI ----
+  function renderSetup() {
+    const s = loadSettings();
+    els.gName.value = s.guardian ? s.guardian.name : "";
+    els.gPhone.value = s.guardian ? s.guardian.phone : "";
+    els.inviteInput.value = localStorage.getItem("calleye.invite") || "";
+    els.contactRows.innerHTML = "";
+    (s.contacts || []).forEach((c) => addContactRow(c.name, c.phone));
+    if (!s.contacts || s.contacts.length === 0) addContactRow("", "");
+  }
+  function addContactRow(name, phone) {
+    const row = document.createElement("div");
+    row.className = "contact-row";
+    row.innerHTML =
+      '<input type="text" placeholder="Name" class="c-name" value="' +
+      escapeAttr(name) + '">' +
+      '<input type="tel" placeholder="+91 phone" class="c-phone" value="' +
+      escapeAttr(phone) + '">' +
+      '<button class="btn">✕</button>';
+    row.querySelector("button").addEventListener("click", () => row.remove());
+    els.contactRows.appendChild(row);
+  }
+  function escapeAttr(v) {
+    return String(v || "").replace(/"/g, "&quot;");
+  }
+  function saveSetup() {
+    const contacts = [];
+    els.contactRows.querySelectorAll(".contact-row").forEach((row) => {
+      const name = row.querySelector(".c-name").value.trim();
+      const phone = row.querySelector(".c-phone").value.trim();
+      if (phone) contacts.push({ name: name || "Contact", phone });
+    });
+    const settings = {
+      guardian: {
+        name: els.gName.value.trim() || "Guardian",
+        phone: els.gPhone.value.trim(),
+      },
+      contacts,
+    };
+    saveSettings(settings);
+    localStorage.setItem("calleye.invite", els.inviteInput.value.trim());
+    showScreen("home");
+  }
+
+  // ---- transcript / analysis ----
   function appendTranscript(text, final) {
     const div = document.createElement("div");
     div.textContent = text;
@@ -62,12 +158,6 @@
     else div.style.color = "var(--muted)";
     els.transcript.appendChild(div);
     els.transcript.scrollTop = els.transcript.scrollHeight;
-  }
-
-  function interfacePressure(level) {
-    const colors = { green: "var(--green)", amber: "var(--amber)", red: "var(--red)" };
-    els.pressureFill.style.background = colors[level] || "var(--green)";
-    els.verdictCard.className = "verdict-card " + level;
   }
 
   function renderStages(stages) {
@@ -82,11 +172,12 @@
   }
 
   function onAnalysis(a) {
+    currentLevel = a.level || "green";
     els.pressureFill.style.width = Math.min(100, a.pressure) + "%";
     els.pressureValue.textContent = Math.round(a.pressure);
     renderStages(a.stages || []);
     els.reasons.textContent = (a.reasons || []).join(" · ");
-    interfacePressure(a.level);
+    els.verdictCard.className = "verdict-card " + currentLevel;
 
     if (a.level === "amber" || a.level === "red") {
       els.verdictLevel.textContent = a.level === "red" ? "🔴 Hang up" : "🟠 Careful";
@@ -95,22 +186,76 @@
     }
   }
 
+  // ---- verify-first flow ----
+  function showVerify(level) {
+    const s = loadSettings();
+    els.guardianPanel.classList.add("hidden");
+
+    els.verifyPanel.classList.remove("hidden");
+    els.trustedList.innerHTML = "";
+    (s.contacts || []).forEach((c) => {
+      const a = document.createElement("a");
+      a.className = "btn";
+      a.href = "tel:" + c.phone;
+      a.textContent = "📞 Call " + c.name;
+      els.trustedList.appendChild(a);
+    });
+    if ((!s.contacts || !s.contacts.length) && level === "red") {
+      els.guardianPanel.classList.remove("hidden");
+      els.guardianName.textContent = s.guardian ? s.guardian.name : "Guardian";
+      els.guardianLink.href = guardianLink(s.guardian);
+    }
+    els.verifyHint.textContent =
+      level === "red"
+        ? "Hang up first. Then verify through a number you already have."
+        : "Call back on a number you already have. Do not use a number the caller gives you.";
+    els.safeWordMsg.textContent = "";
+  }
+
+  function guardianLink(guardian) {
+    if (!guardian || !guardian.phone) return "#";
+    const now = new Date();
+    const msg = "CallEye alert: a suspicious call was flagged at " +
+      now.toLocaleTimeString() + " on " + now.toLocaleDateString() +
+      ". Please check on your loved one.";
+    return "https://wa.me/" + guardian.phone.replace(/[^0-9]/g, "") +
+      "?text=" + encodeURIComponent(msg);
+  }
+
+  function showVerdict(silent) {
+    const s = loadSettings();
+    const level = currentLevel;
+
+    if (silent || level === "green") {
+      showScreen("home");
+      return;
+    }
+    showScreen("verdict");
+
+    if (level === "red") {
+      els.guardianPanel.classList.remove("hidden");
+      els.guardianName.textContent = s.guardian ? s.guardian.name : "Guardian";
+      els.guardianLink.href = guardianLink(s.guardian);
+      showVerify("red");
+    } else {
+      showVerify("amber");
+    }
+  }
+
+  // ---- listening ----
   async function startListening() {
-    const cfg = await fetchConfig();
+    await fetchConfig();
     showScreen("listening");
     els.transcript.innerHTML = "";
     els.reasons.textContent = "";
     els.pressureFill.style.width = "0%";
     els.pressureValue.textContent = "0";
     els.statusLine.textContent = "Starting…";
+    currentLevel = "green";
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: true,
-        },
+        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true },
         video: false,
       });
     } catch (e) {
@@ -121,7 +266,6 @@
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     await audioCtx.audioWorklet.addModule("/audio-processor.js");
     node = new AudioWorkletNode(audioCtx, "downsampler-processor");
-
     const source = audioCtx.createMediaStreamSource(stream);
     source.connect(node);
 
@@ -143,9 +287,7 @@
     els.statusLine.textContent = "Listening… (on speaker)";
 
     node.port.onmessage = (ev) => {
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(ev.data); // binary PCM16 frame
-      }
+      if (ws && ws.readyState === WebSocket.OPEN) ws.send(ev.data);
     };
 
     ws.onmessage = (ev) => {
@@ -166,28 +308,28 @@
   }
 
   async function stopListening(silent) {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ type: "stop" }));
-    }
+    if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: "stop" }));
     if (ws) { try { ws.close(); } catch (e) {} ws = null; }
     if (node) { try { node.disconnect(); } catch (e) {} node = null; }
-    if (stream) {
-      stream.getTracks().forEach((t) => t.stop());
-      stream = null;
-    }
+    if (stream) { stream.getTracks().forEach((t) => t.stop()); stream = null; }
     if (audioCtx) { try { audioCtx.close(); } catch (e) {} audioCtx = null; }
-
-    const level = els.verdictCard.className.split(" ").pop();
-    if (!silent && (level === "amber" || level === "red")) {
-      showScreen("verdict");
-    } else if (!silent) {
-      showScreen("home");
-    }
+    if (!silent) showVerdict(false);
   }
 
+  // ---- events ----
   els.startBtn.addEventListener("click", startListening);
   els.stopBtn.addEventListener("click", () => stopListening(false));
   els.againBtn.addEventListener("click", () => showScreen("home"));
+  els.sunaoBtn.addEventListener("click", () => playVoice(currentLevel || "green"));
+  els.setupBtn.addEventListener("click", () => { renderSetup(); showScreen("setup"); });
+  els.setupLink.addEventListener("click", () => { renderSetup(); showScreen("setup"); });
+  els.saveSetupBtn.addEventListener("click", saveSetup);
+  els.addContactBtn.addEventListener("click", () => addContactRow("", ""));
+  els.safeWordBtn.addEventListener("click", () => {
+    els.safeWordMsg.textContent = "Ask for the family safe word you agreed on in person. A real emergency can survive two minutes of checking; a scam cannot.";
+  });
 
+  renderSetup();
   fetchConfig();
+  loadVoiceManifest();
 })();

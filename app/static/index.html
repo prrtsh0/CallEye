@@ -10,7 +10,10 @@
 <body>
   <header class="topbar">
     <span class="logo">CallEye</span>
-    <span class="status-chip" id="modeChip">…</span>
+    <span class="top-actions">
+      <span class="status-chip" id="modeChip">…</span>
+      <button id="setupBtn" class="icon-btn" title="Settings" aria-label="Settings">⚙️</button>
+    </span>
   </header>
 
   <!-- HOME -->
@@ -29,7 +32,10 @@
     </div>
     <button id="startBtn" class="big-btn">📞 Call aaya hai, sunao</button>
     <p class="footnote">Tap to start listening. Stops automatically after 90s.</p>
-    <a class="link" href="/mic-test">Microphone test</a>
+    <div class="home-links">
+      <a class="link" href="/mic-test">Microphone test</a>
+      <button id="setupLink" class="link-btn">Setup guardian &amp; contacts</button>
+    </div>
   </main>
 
   <!-- LISTENING -->
@@ -43,7 +49,10 @@
     <div class="chips" id="stageChips"></div>
     <div class="transcript" id="transcript"></div>
     <div class="reasons" id="reasons"></div>
-    <button id="stopBtn" class="secondary-btn">Stop</button>
+    <div class="listen-actions">
+      <button id="sunaoBtn" class="secondary-btn">🔊 Sunao (speak)</button>
+      <button id="stopBtn" class="secondary-btn">Stop</button>
+    </div>
   </main>
 
   <!-- VERDICT -->
@@ -53,9 +62,63 @@
       <div class="verdict-text" id="verdictText"></div>
       <div class="verdict-reasons" id="verdictReasons"></div>
     </div>
-    <button id="againBtn" class="secondary-btn">Listen again</button>
+
+    <!-- Verify-first flow (shown for amber/red, especially emergency) -->
+    <div id="verifyPanel" class="verify hidden">
+      <h2>Check before you act</h2>
+      <p id="verifyHint">Call back on a number you already have. Do not use a number the caller gives you.</p>
+      <div id="trustedList" class="trusted-list"></div>
+      <div class="verify-actions">
+        <a id="call112" class="btn emergency" href="tel:112">📞 Call 112 (India)</a>
+        <button id="safeWordBtn" class="btn">Ask the family safe word</button>
+      </div>
+      <p class="footnote" id="safeWordMsg"></p>
+    </div>
+
+    <!-- Guardian alert (red) -->
+    <div id="guardianPanel" class="guardian hidden">
+      <h2>Notify your guardian</h2>
+      <p class="sub" id="guardianName">Guardian</p>
+      <a id="guardianLink" class="btn" href="#">💬 Notify via WhatsApp</a>
+    </div>
+
+    <div class="listen-actions">
+      <button id="againBtn" class="secondary-btn">Listen again</button>
+    </div>
   </main>
 
+  <!-- SETUP -->
+  <main id="setup" class="screen hidden">
+    <h1>Setup</h1>
+
+    <section class="setup-section">
+      <h2>Guardian</h2>
+      <p class="sub">Gets the alert on a red call (type + time only).</p>
+      <label>Name <input id="gName" type="text" placeholder="e.g. Anita" /></label>
+      <label>Phone (with country code) <input id="gPhone" type="tel" placeholder="+91…" /></label>
+    </section>
+
+    <section class="setup-section">
+      <h2>Trusted contacts</h2>
+      <p class="sub">One-tap call buttons in the verify-first screen.</p>
+      <div id="contactRows"></div>
+      <button id="addContactBtn" class="btn">+ Add contact</button>
+    </section>
+
+    <section class="setup-section">
+      <h2>Live-mode invite code</h2>
+      <label>Invite code <input id="inviteInput" type="text" placeholder="(optional)" /></label>
+    </section>
+
+    <section class="setup-section">
+      <h2>Family safe word</h2>
+      <p class="sub">Agree in person. CallEye does not store it, so do not write it here. The button below just reminds you to ask.</p>
+    </section>
+
+    <button id="saveSetupBtn" class="big-btn">Save</button>
+  </main>
+
+  <audio id="voice" preload="none"></audio>
   <script src="/app.js"></script>
 </body>
 </html>

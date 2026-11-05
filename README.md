@@ -149,5 +149,7 @@ MIT — see [LICENSE](LICENSE).
 - [Deployment](docs/DEPLOY.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Gnani integration notes](docs/gnani-notes.md)
+- [Security & privacy review](docs/REVIEW_SECURITY.md)
+- [False-alarm review](docs/REVIEW_FALSE_ALARMS.md)
 - [Engineering Handbook](docs/CallEye_Engineering_Handbook.docx) (source of truth)
 - [User Guide](docs/CallEye_User_Guide.docx)

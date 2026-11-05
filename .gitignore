@@ -11,10 +11,11 @@ venv/
 .pytest_cache/
 .ruff_cache/
 
-# Build artifacts
+# Build artifacts / generated media (keep voice clips under app/static/audio)
 *.log
 *.mp3
 *.wav
+!app/static/audio/**
 app/detector/model.joblib
 
 # OS / editor
