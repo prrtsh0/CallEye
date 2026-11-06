@@ -18,8 +18,8 @@ SITE = BASE / "landing"
 def test_landing_served_at_root():
     r = client.get("/")
     assert r.status_code == 200
-    assert "Slow the scam down." in r.text
-    assert "Open the app" in r.text
+    assert "app.js" in r.text
+    assert "CallEye" in r.text
 
 
 def test_docs_served_at_root():

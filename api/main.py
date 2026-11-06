@@ -298,5 +298,5 @@ app.mount("/data/fixtures", StaticFiles(directory=FIXTURES_DIR), name="fixtures"
 # The installable PWA (scope /app/). Mounted before the landing root.
 app.mount("/app", StaticFiles(directory=APP_DIR, html=True), name="app")
 
-# Public landing at / (must be mounted after API routes).
-app.mount("/", StaticFiles(directory=LANDING_DIR, html=True), name="site")
+# The app serves directly at / (no landing/login).
+app.mount("/", StaticFiles(directory=APP_DIR, html=True), name="app-root")

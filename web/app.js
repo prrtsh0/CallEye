@@ -83,7 +83,6 @@ function authedFetch(url, opts) {
 }
 
 function show(name) {
-  if (name !== "auth" && !state.token) name = "auth";
   Object.values(routes).forEach((id) => $("#" + id).classList.add("hidden"));
   $("#" + routes[name]).classList.remove("hidden");
   setActiveNav(name);
@@ -540,6 +539,13 @@ if ("serviceWorker" in navigator && location.pathname.startsWith("/app")) {
 function boot() {
   initTheme();
   buildSidebar();
+  // Direct-access mode: only practice + upload. Hide live and login entry points.
+  const liveNav = document.querySelector('[data-nav="live"]');
+  if (liveNav) liveNav.classList.add("hidden");
+  const liveBtn = document.getElementById("liveBtn");
+  if (liveBtn) { const card = liveBtn.closest(".action-card"); if (card) card.classList.add("hidden"); }
+  const logoutBtn = document.querySelector(".js-logout");
+  if (logoutBtn) logoutBtn.classList.add("hidden");
   populateGuardian();
   const wasFast = checkWake();
   if (!wasFast) {
@@ -547,21 +553,8 @@ function boot() {
     setTimeout(() => { if (!(state.liveEnabled && state.accessCode)) updateBadge(); }, 2600);
   }
   fetchConfig();
-  if (!state.token) {
-    setAuthMode("login");
-    show("auth");
-    return;
-  }
-  // Validate the stored token; fall back to login if it expired.
-  authedFetch("/api/auth/me")
-    .then((r) => {
-      if (r.status === 401) { state.token = ""; localStorage.removeItem("calleye.token"); setAuthMode("login"); show("auth"); return; }
-      return r.json();
-    })
-    .then((j) => {
-      if (j && j.user) { state.user = j.user; populateProfile(); show(state.setupDone ? "home" : "welcome"); }
-    })
-    .catch(() => { populateProfile(); show(state.setupDone ? "home" : "welcome"); });
+  populateProfile();
+  show("home");
 }
 
 window.addEventListener("hashchange", () => {
