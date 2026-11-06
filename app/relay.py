@@ -74,7 +74,7 @@ class RelayHandler:
         device_id = start.get("device_id", "")
 
         # User auth: the start message must carry a valid session token.
-        from app.auth import user_by_token
+        from app.auth import user_by_token  # noqa: PLC0415  (avoids circular import)
         token = start.get("token") or ""
         if not user_by_token(token):
             await self.ws.send_text(json.dumps({"type": "error", "code": "auth_required"}))

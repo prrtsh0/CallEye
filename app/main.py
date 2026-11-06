@@ -3,20 +3,28 @@ from __future__ import annotations
 
 import json
 import time
-from collections import defaultdict, deque
+from collections import Counter, defaultdict, deque
 
 from fastapi import Depends, FastAPI, File, Header, HTTPException, Request, UploadFile, WebSocket
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.config import APP_DIR, FIXTURES_DIR, SHARED_DIR, SITE_DIR, STATIC_DIR, Settings, get_settings
+from app.auth import create_user, issue_token, require_user, revoke_token, user_by_email
+from app.config import (
+    APP_DIR,
+    FIXTURES_DIR,
+    SHARED_DIR,
+    SITE_DIR,
+    STATIC_DIR,
+    Settings,
+    get_settings,
+)
+from app.db import backend_name, get_connection, init_db
 from app.detector.engine import SessionAnalyzer
-from app.db import init_db
 from app.gnani.credits import CreditTracker
 from app.gnani.factory import get_file_stt_adapter
 from app.guard import GuardManager
 from app.relay import RelayHandler
-from app.auth import create_user, issue_token, require_user, revoke_token, user_by_email
 
 LANGUAGES = ["hi", "hi-latn", "en"]
 
@@ -28,6 +36,11 @@ credits = CreditTracker(
     credits_per_minute=settings.stt_credits_per_minute,
     floor=settings.credit_floor,
 )
+
+_START_TIME = time.time()
+
+# Numbers-only runtime counters for /admin/monitor.
+_MONITOR = {"analyze": 0, "transcribe": 0, "practice": 0, "levels": Counter()}
 
 # Move the API docs (Swagger/ReDoc) off /docs so the public docs page can live
 # there. Swagger remains available at /swagger for development.
@@ -49,7 +62,10 @@ async def signup(body: dict):
     name = (body.get("name") or "").strip()
     password = body.get("password") or ""
     if not email or "@" not in email or not name or len(password) < 6:
-        raise HTTPException(status_code=400, detail="valid email, name, and password (6+ chars) required")
+        raise HTTPException(
+            status_code=400,
+            detail="valid email, name, and password (6+ chars) required",
+        )
     user_id = create_user(email, name, password)
     if user_id is None:
         raise HTTPException(status_code=409, detail="an account with that email already exists")
@@ -60,7 +76,7 @@ async def signup(body: dict):
 async def login(body: dict):
     email = (body.get("email") or "").strip().lower()
     password = body.get("password") or ""
-    from app.auth import verify_password
+    from app.auth import verify_password  # noqa: PLC0415  (avoids circular import)
     user = user_by_email(email)
     if not user or not verify_password(password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="invalid email or password")
@@ -146,7 +162,10 @@ async def analyze(body: dict, user: dict = Depends(require_user)):
     text = (body.get("text") or "").strip()
     if not text:
         raise HTTPException(status_code=400, detail="text is required")
-    return _verdict(text)
+    verdict = _verdict(text)
+    _MONITOR["analyze"] += 1
+    _MONITOR["levels"][verdict["level"]] += 1
+    return verdict
 
 
 @app.post("/api/transcribe")
@@ -157,6 +176,8 @@ async def transcribe(file: UploadFile = File(...), lang: str = "hi",
     result = await adapter.transcribe_file(audio, lang)
     verdict = _verdict(result.full_text)
     verdict["transcript"] = result.full_text
+    _MONITOR["transcribe"] += 1
+    _MONITOR["levels"][verdict["level"]] += 1
     return verdict
 
 
@@ -193,6 +214,7 @@ async def practice(fixture: str, user: dict = Depends(require_user)):
             "would_never_ask": result.would_never_ask,
             "t": round(t, 1),
         })
+    _MONITOR["practice"] += 1
     return {"id": data.get("id", fixture), "label": data.get("label", ""),
             "events": events}
 
@@ -208,6 +230,28 @@ async def admin_usage(request: Request):
     if settings.admin_token and token != settings.admin_token:
         raise HTTPException(status_code=401, detail="invalid admin token")
     return {"guard": guard.usage(), "credits": credits.snapshot()}
+
+
+@app.get("/admin/monitor")
+async def admin_monitor(request: Request):
+    """Numbers-only health/monitor stats (no PII, no transcripts)."""
+    token = request.headers.get("x-admin-token") or ""
+    if settings.admin_token and token != settings.admin_token:
+        raise HTTPException(status_code=401, detail="invalid admin token")
+    users = sessions = 0
+    try:
+        with get_connection() as conn:
+            users = conn.execute("SELECT COUNT(*) AS n FROM users").fetchone()["n"]
+            sessions = conn.execute("SELECT COUNT(*) AS n FROM sessions").fetchone()["n"]
+    except Exception:
+        pass  # DB not ready yet / read-only
+    return {
+        "users": users,
+        "sessions": sessions,
+        "calls": dict(_MONITOR),
+        "backend": backend_name(),
+        "uptime_s": int(time.time() - _START_TIME),
+    }
 
 
 @app.get("/mic-test")

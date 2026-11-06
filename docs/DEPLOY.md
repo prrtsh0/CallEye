@@ -64,12 +64,32 @@ local runs. Secrets are never committed.
 | `DAILY_CAP_PER_DEVICE` | default 10 |
 | `GLOBAL_KILL_SWITCH` | `1` forces mock mode |
 | `CREDIT_FLOOR` / `STT_CREDITS_PER_MINUTE` | credit guards |
-| `ADMIN_TOKEN` | protects `/admin/usage` |
+| `ADMIN_TOKEN` | protects `/admin/usage` & `/admin/monitor` |
 | `ALLOWED_ORIGINS` | CORS allow-list |
+| `DATABASE_URL` | Neon Postgres DSN; empty = local SQLite |
 
 > ⚠️ Until `GNANI_MODE=live` **and** `GNANI_STT_WS_URL` are set, the app stays
 > in **mock** mode (zero STT credits, replays fixtures). Flip to live only when
 > you have real Gnani credentials configured in the dashboard.
+
+## User database: Neon Postgres
+
+By default CallEye stores users in local SQLite (`data/calleye.db`), which resets
+on Render free-tier redeploys. For persistent accounts:
+
+1. Create a free **Neon** project (no card required) and copy its connection
+   string (DSN), e.g. `postgres://user:pass@ep-….us-east-2.aws.neon.tech/db?sslmode=require`.
+2. In Render dashboard → your service → **Environment**, add
+   `DATABASE_URL = <your Neon DSN>`.
+3. Deploy. The app now uses Postgres (`/admin/monitor` shows `backend: postgres`).
+   Existing SQLite users are not migrated automatically.
+
+## Monitoring & uptime
+
+- `GET /admin/monitor` (with `x-admin-token` if set) returns numbers-only stats:
+  user/session counts, calls by endpoint, verdict distribution, backend, uptime.
+- `GET /healthz` is the uptime target — point any free uptime pinger (e.g.
+  UptimeRobot) at `https://your-app.onrender.com/healthz`.
 
 ## Pre-demo checklist
 

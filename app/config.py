@@ -50,6 +50,11 @@ class Settings(BaseSettings):
     allowed_origins: str = ""  # comma separated
     log_level: str = "info"
 
+    # Database -----------------------------------------------------------
+    # Leave empty to use local SQLite (data/calleye.db). Set to a Neon
+    # Postgres DSN (postgres://…) for a managed, persistent user store.
+    database_url: str = ""
+
     # Landing/app --------------------------------------------------------
     app_url: str = "/app/"  # single config value for the app URL (landing uses this)
 

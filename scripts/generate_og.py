@@ -13,7 +13,7 @@ W, H = 1200, 630
 
 
 def _font(size: int):
-    import os
+    import os  # noqa: PLC0415  (stdlib, used only here)
     candidates = [
         r"C:\Windows\Fonts\arialbd.ttf",
         r"C:\Windows\Fonts\segoeuib.ttf",
@@ -22,15 +22,15 @@ def _font(size: int):
     ]
     for p in candidates:
         if os.path.exists(p):
-            from PIL import ImageFont
+            from PIL import ImageFont  # noqa: PLC0415
             return ImageFont.truetype(p, size)
-    from PIL import ImageFont
+    from PIL import ImageFont  # noqa: PLC0415
     return ImageFont.load_default()
 
 
 def main() -> int:
     try:
-        from PIL import Image, ImageDraw
+        from PIL import Image, ImageDraw  # noqa: PLC0415
     except Exception as e:  # pragma: no cover
         print("Pillow not available:", e)
         return 1

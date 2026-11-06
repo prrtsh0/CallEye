@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 
 TEST_EMAIL = "tester@calleye.dev"
-TEST_PASS = "correct-horse-battery"
+TEST_PASS = "correct-horse-battery"  # noqa: S105  (test fixture, not a secret)
 
 
 @pytest.fixture(scope="session")

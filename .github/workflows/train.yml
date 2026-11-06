@@ -33,12 +33,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eval-report
-          path: eval/report.md
-
-      - name: Commit updated model report
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add eval/model_report.md eval/report.md || true
-          git diff --cached --quiet || git commit -m "chore(model): retrain + update report [skip ci]"
-          git push
+          path: |
+            eval/report.md
+            eval/model_report.md

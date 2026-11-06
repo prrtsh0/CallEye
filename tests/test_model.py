@@ -21,7 +21,7 @@ MODEL_PATH = BASE / "app/detector/model.joblib"
 
 
 def _load_split(name):
-    import json
+    import json  # noqa: PLC0415
     path = BASE / "data/calls" / f"{name}.json"
     if not path.exists():
         return []
@@ -44,7 +44,8 @@ def test_train_and_test_splits_are_disjoint():
 
 def test_analyze_endpoint_returns_p_scam(auth_client):
     # With a model present, the API must expose the classifier's output.
-    r = auth_client("POST", "/api/analyze", json={"text": "I am calling from the police, pay bail now"})
+    r = auth_client("POST", "/api/analyze",
+                    json={"text": "I am calling from the police, pay bail now"})
     assert r.status_code == 200
     body = r.json()
     assert "p_scam" in body

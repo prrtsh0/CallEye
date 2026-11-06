@@ -11,7 +11,7 @@ import hmac
 import secrets
 import sqlite3
 
-from fastapi import Depends, Header, HTTPException
+from fastapi import Header, HTTPException
 
 from app.db import get_connection
 

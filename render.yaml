@@ -25,3 +25,8 @@ services:
         sync: false
       - key: GNANI_TTS_URL
         sync: false
+      # --- Neon Postgres ---
+      # Set to your Neon DSN (postgres://…) in the Render dashboard to store
+      # users in a managed, persistent database instead of local SQLite.
+      - key: DATABASE_URL
+        sync: false

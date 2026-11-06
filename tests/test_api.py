@@ -51,3 +51,16 @@ def test_analyze_requires_auth(client):
 def test_admin_usage_requires_token():
     r = client.get("/admin/usage")
     assert r.status_code == 200  # no token configured => open
+
+
+def test_admin_monitor_returns_numbers_only():
+    r = client.get("/admin/monitor")
+    assert r.status_code == 200
+    data = r.json()
+    assert {"users", "sessions", "calls", "backend", "uptime_s"} <= set(data)
+    assert isinstance(data["users"], int)
+    assert isinstance(data["sessions"], int)
+    assert isinstance(data["uptime_s"], int)
+    # numbers-only: no emails, transcripts, or passwords
+    assert "email" not in str(data).lower()
+    assert "transcript" not in str(data).lower()
