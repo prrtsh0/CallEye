@@ -42,9 +42,9 @@ def test_train_and_test_splits_are_disjoint():
     assert train_ids & test_ids == set(), "test split leaked into training"
 
 
-def test_analyze_endpoint_returns_p_scam():
+def test_analyze_endpoint_returns_p_scam(auth_client):
     # With a model present, the API must expose the classifier's output.
-    r = client.post("/api/analyze", json={"text": "I am calling from the police, pay bail now"})
+    r = auth_client("POST", "/api/analyze", json={"text": "I am calling from the police, pay bail now"})
     assert r.status_code == 200
     body = r.json()
     assert "p_scam" in body

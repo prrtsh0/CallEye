@@ -18,6 +18,9 @@ venv/
 !app/static/audio/**
 app/detector/model.joblib
 
+# Local user database (contains password hashes; never commit)
+data/calleye.db
+
 # OS / editor
 .DS_Store
 Thumbs.db

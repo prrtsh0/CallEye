@@ -11,6 +11,14 @@ const els = {
   practice: $("#view-practice"),
   live: $("#view-live"),
   upload: $("#view-upload"),
+  auth: $("#view-auth"),
+  authTitle: $("#authTitle"),
+  authName: $("#authName"),
+  authEmail: $("#authEmail"),
+  authPassword: $("#authPassword"),
+  authMsg: $("#authMsg"),
+  authSubmit: $("#authSubmit"),
+  authToggle: $("#authToggle"),
   modeBadge: $("#modeBadge"),
   settingsHint: $("#settingsHint"),
   welcomeStart: $("#welcomeStart"),
@@ -31,6 +39,7 @@ const els = {
   unlockSubmit: $("#unlockSubmit"),
   unlockCancel: $("#unlockCancel"),
   forgetBtn: $("#forgetBtn"),
+  logoutBtn: $("#logoutBtn"),
   gName: $("#gName"),
   gPhone: $("#gPhone"),
   uploadFile: $("#uploadFile"),
@@ -39,6 +48,7 @@ const els = {
 };
 
 const routes = {
+  auth: "view-auth",
   welcome: "view-welcome",
   setup: "view-setup",
   home: "view-home",
@@ -53,9 +63,21 @@ const state = {
   liveEnabled: false,
   dailyCap: 0,
   lang: "en",
+  token: localStorage.getItem("calleye.token") || "",
+  user: null,
+  authMode: "login", // "login" | "signup"
 };
 
+// Fetch wrapper that attaches the bearer token.
+function authedFetch(url, opts) {
+  opts = opts || {};
+  opts.headers = Object.assign({}, opts.headers || {});
+  if (state.token) opts.headers["Authorization"] = "Bearer " + state.token;
+  return fetch(url, opts);
+}
+
 function show(name) {
+  if (name !== "auth" && !state.token) name = "auth";
   Object.values(routes).forEach((id) => $("#" + id).classList.add("hidden"));
   $("#" + routes[name]).classList.remove("hidden");
   if (location.hash !== "#/" + name) history.replaceState(null, "", "#/" + name);
@@ -101,6 +123,68 @@ function checkWake() {
     .finally(() => clearTimeout(t));
 }
 
+// ---- auth (login / signup) ----
+function setAuthMode(mode) {
+  state.authMode = mode;
+  els.authTitle.textContent = mode === "signup" ? "Create your account" : "Log in to CallEye";
+  els.authSubmit.textContent = mode === "signup" ? "Sign up" : "Log in";
+  els.authToggle.textContent = mode === "signup" ? "Already have an account? Log in" : "Need an account? Sign up";
+  els.authName.closest("label").style.display = mode === "signup" ? "" : "none";
+  els.authMsg.textContent = "";
+  els.authMsg.className = "msg";
+}
+
+async function submitAuth() {
+  const email = els.authEmail.value.trim();
+  const password = els.authPassword.value;
+  const name = els.authName.value.trim();
+  if (!email || !password) {
+    els.authMsg.textContent = "Email and password are required.";
+    els.authMsg.className = "msg err";
+    return;
+  }
+  if (state.authMode === "signup" && !name) {
+    els.authMsg.textContent = "Please enter your name.";
+    els.authMsg.className = "msg err";
+    return;
+  }
+  const path = state.authMode === "signup" ? "/api/auth/signup" : "/api/auth/login";
+  const body = { email, password };
+  if (state.authMode === "signup") body.name = name;
+  try {
+    const r = await fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json();
+    if (!r.ok) {
+      els.authMsg.textContent = j.detail || "Something went wrong.";
+      els.authMsg.className = "msg err";
+      return;
+    }
+    state.token = j.token;
+    state.user = j.user;
+    localStorage.setItem("calleye.token", j.token);
+    show("home");
+  } catch (e) {
+    els.authMsg.textContent = "Network error. Try again.";
+    els.authMsg.className = "msg err";
+  }
+}
+
+function logout() {
+  if (state.token) {
+    fetch("/api/auth/logout", { method: "POST", headers: { Authorization: "Bearer " + state.token } })
+      .catch(() => {});
+  }
+  state.token = "";
+  state.user = null;
+  localStorage.removeItem("calleye.token");
+  setAuthMode("login");
+  show("auth");
+}
+
 // ---- practice call (runs the REAL backend detector; no mic, no credits) ----
 const practiceView = createResultView(els.practiceResult);
 let practiceTimers = [];
@@ -118,8 +202,9 @@ function playPractice() {
   practiceView.reset();
   practiceView.setScenario("Digital-arrest sample (real detector)");
 
-  fetch("/api/practice/demo_digital_arrest", { method: "POST" })
+  authedFetch("/api/practice/demo_digital_arrest", { method: "POST" })
     .then((r) => {
+      if (r.status === 401) { logout(); throw new Error("please log in"); }
       if (!r.ok) throw new Error("practice endpoint failed");
       return r.json();
     })
@@ -210,6 +295,7 @@ function startLive() {
       lang: state.lang,
       device_id: getDeviceId(),
       code: state.accessCode,
+      token: state.token,
       fixture: "demo_digital_arrest",
     }));
     els.liveStatus.textContent = "Listening…";
@@ -243,7 +329,8 @@ async function runUpload() {
   fd.append("file", f);
   fd.append("lang", state.lang);
   try {
-    const r = await fetch("/api/transcribe", { method: "POST", body: fd });
+    const r = await authedFetch("/api/transcribe", { method: "POST", body: fd });
+    if (r.status === 401) { logout(); return; }
     const j = await r.json();
     els.uploadOut.innerHTML =
       "<strong>Level:</strong> " + (j.level || "?") +
@@ -284,6 +371,9 @@ els.forgetBtn.addEventListener("click", () => {
   els.settingsHint.textContent = "Access code forgotten. You are signed out of live mode.";
 });
 els.uploadGo.addEventListener("click", runUpload);
+els.authSubmit.addEventListener("click", submitAuth);
+els.authToggle.addEventListener("click", () => setAuthMode(state.authMode === "signup" ? "login" : "signup"));
+els.authPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") submitAuth(); });
 
 // Register the service worker ONLY from the app (scope /app/). The landing
 // never registers a service worker.
@@ -299,7 +389,21 @@ function boot() {
     setTimeout(() => { if (!(state.liveEnabled && state.accessCode)) updateBadge(); }, 2600);
   }
   fetchConfig();
-  show(state.setupDone ? "home" : "welcome");
+  if (!state.token) {
+    setAuthMode("login");
+    show("auth");
+    return;
+  }
+  // Validate the stored token; fall back to login if it expired.
+  authedFetch("/api/auth/me")
+    .then((r) => {
+      if (r.status === 401) { state.token = ""; localStorage.removeItem("calleye.token"); setAuthMode("login"); show("auth"); return; }
+      return r.json();
+    })
+    .then((j) => {
+      if (j && j.user) { state.user = j.user; show(state.setupDone ? "home" : "welcome"); }
+    })
+    .catch(() => show(state.setupDone ? "home" : "welcome"));
 }
 
 window.addEventListener("hashchange", () => {

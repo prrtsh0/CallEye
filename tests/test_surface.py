@@ -52,8 +52,8 @@ def test_mictest_still_served():
 
 
 # ---------- /api/practice (real detector) ----------
-def test_practice_runs_real_detector():
-    r = client.post("/api/practice/demo_digital_arrest")
+def test_practice_runs_real_detector(auth_client):
+    r = auth_client("POST", "/api/practice/demo_digital_arrest")
     assert r.status_code == 200
     data = r.json()
     assert data["label"] == "scam"
@@ -66,8 +66,8 @@ def test_practice_runs_real_detector():
     assert last["level"] == "red"
 
 
-def test_practice_unknown_fixture_404():
-    assert client.post("/api/practice/nope").status_code == 404
+def test_practice_unknown_fixture_404(auth_client):
+    assert auth_client("POST", "/api/practice/nope").status_code == 404
 
 
 # ---------- /api/unlock ----------

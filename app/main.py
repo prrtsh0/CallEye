@@ -5,16 +5,18 @@ import json
 import time
 from collections import defaultdict, deque
 
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile, WebSocket
+from fastapi import Depends, FastAPI, File, Header, HTTPException, Request, UploadFile, WebSocket
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import APP_DIR, FIXTURES_DIR, SHARED_DIR, SITE_DIR, STATIC_DIR, Settings, get_settings
 from app.detector.engine import SessionAnalyzer
+from app.db import init_db
 from app.gnani.credits import CreditTracker
 from app.gnani.factory import get_file_stt_adapter
 from app.guard import GuardManager
 from app.relay import RelayHandler
+from app.auth import create_user, issue_token, require_user, revoke_token, user_by_email
 
 LANGUAGES = ["hi", "hi-latn", "en"]
 
@@ -31,10 +33,51 @@ credits = CreditTracker(
 # there. Swagger remains available at /swagger for development.
 app = FastAPI(title="CallEye", version="1.0.0", docs_url="/swagger", redoc_url="/redoc")
 
+# Ensure the user DB exists (safe to call repeatedly).
+init_db()
+
 
 @app.get("/healthz")
 async def healthz():
     return {"status": "ok", "app": settings.app_name}
+
+
+# ---------- /api/auth (signup / login / me / logout) ----------
+@app.post("/api/auth/signup")
+async def signup(body: dict):
+    email = (body.get("email") or "").strip().lower()
+    name = (body.get("name") or "").strip()
+    password = body.get("password") or ""
+    if not email or "@" not in email or not name or len(password) < 6:
+        raise HTTPException(status_code=400, detail="valid email, name, and password (6+ chars) required")
+    user_id = create_user(email, name, password)
+    if user_id is None:
+        raise HTTPException(status_code=409, detail="an account with that email already exists")
+    return {"ok": True, "token": issue_token(user_id), "user": {"email": email, "name": name}}
+
+
+@app.post("/api/auth/login")
+async def login(body: dict):
+    email = (body.get("email") or "").strip().lower()
+    password = body.get("password") or ""
+    from app.auth import verify_password
+    user = user_by_email(email)
+    if not user or not verify_password(password, user["password_hash"]):
+        raise HTTPException(status_code=401, detail="invalid email or password")
+    return {"ok": True, "token": issue_token(user["id"]),
+            "user": {"email": user["email"], "name": user["name"]}}
+
+
+@app.get("/api/auth/me")
+async def me(user: dict = Depends(require_user)):
+    return {"user": {"email": user["email"], "name": user["name"]}}
+
+
+@app.post("/api/auth/logout")
+async def logout(authorization: str = Header(default="")):
+    if authorization.lower().startswith("bearer "):
+        revoke_token(authorization[7:].strip())
+    return {"ok": True}
 
 
 _UNLOCK_ATTEMPTS: dict[str, deque] = defaultdict(deque)
@@ -99,7 +142,7 @@ def _verdict(text: str) -> dict:
 
 
 @app.post("/api/analyze")
-async def analyze(body: dict):
+async def analyze(body: dict, user: dict = Depends(require_user)):
     text = (body.get("text") or "").strip()
     if not text:
         raise HTTPException(status_code=400, detail="text is required")
@@ -107,7 +150,8 @@ async def analyze(body: dict):
 
 
 @app.post("/api/transcribe")
-async def transcribe(file: UploadFile = File(...), lang: str = "hi"):
+async def transcribe(file: UploadFile = File(...), lang: str = "hi",
+                    user: dict = Depends(require_user)):
     audio = await file.read()
     adapter = get_file_stt_adapter(settings)
     result = await adapter.transcribe_file(audio, lang)
@@ -117,7 +161,7 @@ async def transcribe(file: UploadFile = File(...), lang: str = "hi"):
 
 
 @app.post("/api/practice/{fixture}")
-async def practice(fixture: str):
+async def practice(fixture: str, user: dict = Depends(require_user)):
     """Replay a stored fixture through the REAL detector (SessionAnalyzer) and
     return the same event stream the live WebSocket relay emits. This lets the
     app's practice mode exercise the actual Python model, not a browser-side

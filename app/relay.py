@@ -73,6 +73,15 @@ class RelayHandler:
         code = start.get("code")
         device_id = start.get("device_id", "")
 
+        # User auth: the start message must carry a valid session token.
+        from app.auth import user_by_token
+        token = start.get("token") or ""
+        if not user_by_token(token):
+            await self.ws.send_text(json.dumps({"type": "error", "code": "auth_required"}))
+            await self.ws.close(code=1008)
+            writer.cancel()
+            return
+
         # Mock mode can replay a chosen fixture (e.g. a scam vs a genuine call)
         # so the landing-page demo can show the difference. Ignored in live mode.
         if self.settings.effective_mode == "mock" and hasattr(self.stt, "select_fixture"):

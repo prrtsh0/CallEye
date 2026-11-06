@@ -19,8 +19,8 @@ def test_api_config():
     assert data["mode"] == "mock"
 
 
-def test_analyze_scam():
-    r = client.post("/api/analyze", json={
+def test_analyze_scam(auth_client):
+    r = auth_client("POST", "/api/analyze", json={
         "text": "main police thana se bol raha hoon. aapke naam par case darj hua hai. "
                 "aapko arrest ho sakta hai. kisi ko mat batana. bail ke liye paise transfer "
                 "karo. mujhe aapka OTP chahiye."
@@ -29,8 +29,8 @@ def test_analyze_scam():
     assert r.json()["level"] == "red"
 
 
-def test_analyze_genuine():
-    r = client.post("/api/analyze", json={
+def test_analyze_genuine(auth_client):
+    r = auth_client("POST", "/api/analyze", json={
         "text": "aapke bank account me transaction hui hai. kisi ko OTP mat batana. "
                 "bank kabhi bhi OTP nahi maangta."
     })
@@ -38,9 +38,14 @@ def test_analyze_genuine():
     assert r.json()["level"] in ("green", "amber")
 
 
-def test_analyze_empty_returns_400():
-    r = client.post("/api/analyze", json={"text": ""})
+def test_analyze_empty_returns_400(auth_client):
+    r = auth_client("POST", "/api/analyze", json={"text": ""})
     assert r.status_code == 400
+
+
+def test_analyze_requires_auth(client):
+    r = client.post("/api/analyze", json={"text": "hello"})
+    assert r.status_code == 401
 
 
 def test_admin_usage_requires_token():

@@ -19,6 +19,20 @@
     <span class="mode-badge" id="modeBadge">Practice mode: no microphone, no credits</span>
   </header>
 
+  <!-- Auth (login / signup) -->
+  <main id="view-auth" class="view hidden">
+    <div class="card center">
+      <h1 id="authTitle">Log in to CallEye</h1>
+      <p class="hint">An account keeps your analysis yours and enables the app.</p>
+      <label>Name <input id="authName" type="text" placeholder="e.g. Priya" autocomplete="name" /></label>
+      <label>Email <input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" /></label>
+      <label>Password <input id="authPassword" type="password" placeholder="6+ characters" autocomplete="current-password" /></label>
+      <p id="authMsg" class="msg"></p>
+      <button id="authSubmit" class="btn-primary">Log in</button>
+      <button id="authToggle" class="btn-ghost small">Need an account? Sign up</button>
+    </div>
+  </main>
+
   <!-- Welcome (first run) -->
   <main id="view-welcome" class="view hidden">
     <div class="card center">
@@ -53,6 +67,7 @@
       <div class="settings-box">
         <h2>Settings</h2>
         <button id="forgetBtn" class="btn-ghost small">Forget access code</button>
+        <button id="logoutBtn" class="btn-ghost small">Log out</button>
         <p class="hint" id="settingsHint"></p>
       </div>
     </div>
