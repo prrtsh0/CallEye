@@ -93,6 +93,8 @@ def _verdict(text: str) -> dict:
         "stages": result.stages,
         "reasons": result.reasons,
         "would_never_ask": result.would_never_ask,
+        # The model's output (None when no model is present / falls back to rules).
+        "p_scam": result.p_scam,
     }
 
 
