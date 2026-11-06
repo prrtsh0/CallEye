@@ -48,6 +48,17 @@ class DecisionEngine:
         if getattr(s, "would_never_ask", False):
             return self._red()
 
+        # Early manipulation build-up: the classic pre-ask setup in scripted
+        # scams. Warn (amber) as soon as authority+fear+isolation (or
+        # urgency+isolation) appear, *before* the money/ask request lands. Red
+        # still latches later if a would-never ask or the red pattern appears.
+        if getattr(s, "setup_detected", False):
+            if self.level != Level.AMBER:
+                return self._amber(t)
+            # Already amber: refresh the cooldown timer (still active).
+            self.last_amber_t = t
+            return Level.AMBER
+
         lever = getattr(s, "lever", "unknown")
         p_scam = getattr(s, "p_scam", None) or 0.5
         stages = getattr(s, "stages_hit", 0)

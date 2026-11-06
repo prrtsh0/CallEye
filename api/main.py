@@ -24,6 +24,7 @@ from api.gnani.factory import get_file_stt_adapter
 from api.guard import GuardManager
 from api.relay import RelayHandler
 from model.detector.engine import SessionAnalyzer
+from model.detector.explain import build_explanation, guardian_note
 
 LANGUAGES = ["hi", "hi-latn", "en"]
 
@@ -153,6 +154,9 @@ def _verdict(text: str) -> dict:
         "would_never_ask": result.would_never_ask,
         # The model's output (None when no model is present / falls back to rules).
         "p_scam": result.p_scam,
+        "explanation": build_explanation(result),
+        "guardian_note": guardian_note(result),
+        "setup_detected": result.setup_detected,
     }
 
 
@@ -211,6 +215,9 @@ async def practice(fixture: str, user: dict = Depends(require_user)):
             "stages": list(result.stages),
             "reasons": list(result.reasons),
             "would_never_ask": result.would_never_ask,
+            "explanation": build_explanation(result),
+            "guardian_note": guardian_note(result),
+            "setup_detected": result.setup_detected,
             "t": round(t, 1),
         })
     _MONITOR["practice"] += 1

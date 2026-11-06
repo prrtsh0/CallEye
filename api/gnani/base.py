@@ -4,7 +4,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections.abc import AsyncIterator, Callable
 
-from api.gnani.types import TTSAudio, TTSRequest
+from api.gnani.types import ReasonRequest, ReasonResponse, TTSAudio, TTSRequest
 
 # A callback receiving each live transcript segment as it is produced.
 OnSegment = Callable[[str, bool, float], None]
@@ -39,4 +39,12 @@ class TTSAdapter(ABC):
 
     @abstractmethod
     async def synthesize(self, request: TTSRequest) -> TTSAudio:
+        raise NotImplementedError
+
+
+class ReasonAdapter(ABC):
+    """Reasoning/explanation model (Evon)."""
+
+    @abstractmethod
+    async def explain(self, request: ReasonRequest) -> ReasonResponse:
         raise NotImplementedError

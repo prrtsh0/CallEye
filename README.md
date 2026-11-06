@@ -109,6 +109,19 @@ ruff check .
 python scripts/smoke.py http://localhost:8000
 ```
 
+## Gnani models used
+
+CallEye is a three-model Gnani build:
+
+- **Prisma** — realtime speech-to-text for the live call (WebSocket).
+- **Timbre** — text-to-speech; pre-generates the calm guardian / result voice
+  clips at build time (no runtime TTS cost).
+- **Evon** — 30B reasoning model; produces the plain-language explanation of
+  the verdict and the guardian alert text. In `mock` mode a deterministic
+  rule-based explanation is used (zero credits); set `GNANI_EVON_URL` to go
+  live. The wire format is isolated in `api/gnani/evon.py` and must be
+  confirmed against the Gnani docs before first live use.
+
 ## Going live (Gnani)
 
 1. Fill in `.env` with your Gnani keys/URLs; set `GNANI_MODE=live`.

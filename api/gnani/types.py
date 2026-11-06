@@ -39,3 +39,21 @@ class TTSAudio:
 
     data: bytes
     content_type: str = "audio/mpeg"
+
+
+@dataclass
+class ReasonRequest:
+    """A request to the Evon reasoning model."""
+
+    language: str
+    transcript: str
+    level: str
+    reasons: list[str] = field(default_factory=list)
+
+
+@dataclass
+class ReasonResponse:
+    """Plain-language reasoning output."""
+
+    explanation: str
+    guardian_note: str = ""

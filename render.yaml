@@ -25,6 +25,13 @@ services:
         sync: false
       - key: GNANI_TTS_URL
         sync: false
+      # --- Gnani Evon reasoning (explanations) ---
+      - key: GNANI_EVON_URL
+        sync: false
+      - key: GNANI_EVON_API_KEY
+        sync: false
+      - key: GNANI_EVON_MODEL
+        sync: false
       # --- Neon Postgres ---
       # Set to your Neon DSN (postgres://…) in the Render dashboard to store
       # users in a managed, persistent database instead of local SQLite.

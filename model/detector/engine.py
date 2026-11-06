@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from model.detector.asks import would_never_ask
 from model.detector.classifier import ScamClassifier
 from model.detector.decision import DecisionEngine
+from model.detector.explain import build_explanation, guardian_note
 from model.detector.levers import detect_lever
 from model.detector.lexicon import PlaybookLexicon
 from model.detector.pressure import PressureMeter
@@ -27,6 +28,9 @@ class AnalysisResult:
     isolation: bool = False
     urgency: bool = False
     stages_hit: int = 0
+    setup_detected: bool = False
+    explanation: str = ""
+    guardian_note: str = ""
     timestamp: float = 0.0
 
 
@@ -68,6 +72,13 @@ class SessionAnalyzer:
         wna_pat = self._wna_pat
         p_scam = self.classifier.p_scam(combined)
 
+        # The manipulation build-up: authority + fear + isolation, or urgency +
+        # isolation, is the classic pre-ask setup in scripted scams. Flagging it
+        # lets us warn *before* the demand actually lands.
+        setup_detected = (
+            "authority" in stages and "fear" in stages and "isolation" in stages
+        ) or ("urgency" in stages and "isolation" in stages)
+
         # Reason strings for the UI (top matched phrases, de-duplicated).
         reasons = []
         for cat in ("authority", "fear", "isolation", "urgency", "ask"):
@@ -92,12 +103,15 @@ class SessionAnalyzer:
             isolation="isolation" in stages,
             urgency="urgency" in stages,
             stages_hit=len(stages),
+            setup_detected=setup_detected,
             timestamp=t,
         )
 
         self.decision.decide(snapshot, t)
         snapshot.level = self.decision.label
         snapshot.screen_text = self.decision.screen_text
+        snapshot.explanation = build_explanation(snapshot)
+        snapshot.guardian_note = guardian_note(snapshot)
         return snapshot
 
     def _snapshot(self, t: float) -> AnalysisResult:

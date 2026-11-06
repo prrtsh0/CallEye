@@ -35,6 +35,10 @@ class Settings(BaseSettings):
     gnani_api_key: str = ""
     gnani_stt_ws_url: str = ""
     gnani_tts_url: str = ""
+    # Evon (30B reasoning model) — used for plain-language explanations.
+    gnani_evon_url: str = ""
+    gnani_evon_api_key: str = ""
+    gnani_evon_model: str = "evon"
 
     # Access & abuse controls -------------------------------------------
     invite_codes: str = ""  # comma separated; empty => live mode open

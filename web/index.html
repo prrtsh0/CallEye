@@ -8,7 +8,8 @@
   <link rel="manifest" href="/app/manifest.webmanifest" />
   <link rel="stylesheet" href="/shared/fonts.css" />
   <link rel="stylesheet" href="/shared/tokens.css" />
-  <link rel="stylesheet" href="/app/styles.css?v=1" />
+  <link rel="stylesheet" href="/app/styles.css" />
+  <meta name="theme-color" content="#091f40" />
 </head>
 <body>
   <header class="topbar">
@@ -55,54 +56,117 @@
     </div>
   </main>
 
-  <!-- Home -->
-  <main id="view-home" class="view hidden">
-    <div class="card">
-      <h1>Home</h1>
-      <div class="action-grid">
-        <button id="practiceBtn" class="btn-primary">Try a practice call</button>
-        <button id="liveBtn" class="btn-ghost">Go live</button>
-        <button id="uploadBtn" class="btn-ghost">Upload a recording</button>
-      </div>
-      <div class="settings-box">
-        <h2>Settings</h2>
-        <button id="forgetBtn" class="btn-ghost small">Forget access code</button>
-        <button id="logoutBtn" class="btn-ghost small">Log out</button>
-        <p class="hint" id="settingsHint"></p>
-      </div>
+  <!-- Home dashboard (3 panels) -->
+  <main id="view-home" class="view view-dash hidden">
+    <div class="dash dash-3">
+      <!-- Panel 1 · sidebar navigation -->
+      <aside class="side" data-side></aside>
+
+      <!-- Panel 2 · main actions -->
+      <section class="main panel">
+        <div class="greet">
+          <h1>Welcome back</h1>
+          <p id="greetSub">What would you like to do today?</p>
+        </div>
+        <div class="action-cards">
+          <div class="action-card">
+            <div class="ac-icon" aria-hidden="true">🎧</div>
+            <h3>Practice call</h3>
+            <p>Run the real detector on a stored sample — no mic, no credits.</p>
+            <button id="practiceBtn" class="btn-primary">Try a practice call</button>
+          </div>
+          <div class="action-card">
+            <div class="ac-icon" aria-hidden="true">🔴</div>
+            <h3>Go live</h3>
+            <p id="liveCardSub">Live mode needs an access code from your organiser.</p>
+            <button id="liveBtn" class="btn-ghost">Go live</button>
+          </div>
+          <div class="action-card">
+            <div class="ac-icon" aria-hidden="true">⬆️</div>
+            <h3>Upload a recording</h3>
+            <p>Analyse an audio file you already have.</p>
+            <button id="uploadBtn" class="btn-ghost">Upload</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 3 · status rail -->
+      <aside class="rail">
+        <div class="panel rail-card">
+          <h3>Mode</h3>
+          <div class="mode-badge rail-mode" id="railModeBadge">Practice mode</div>
+          <p class="hint" id="railModeHint">No microphone, no credits.</p>
+        </div>
+        <div class="panel rail-card">
+          <h3>Guardian</h3>
+          <p class="g-line" id="guardianLine">Not set up yet.</p>
+          <p class="hint">Gets a notice if a call turns red.</p>
+        </div>
+        <div class="panel rail-card">
+          <h3>Settings</h3>
+          <button id="forgetBtn" class="btn-ghost small">Forget access code</button>
+          <p class="hint" id="settingsHint"></p>
+        </div>
+      </aside>
     </div>
   </main>
 
   <!-- Practice result -->
-  <main id="view-practice" class="view hidden">
-    <div class="card">
-      <button id="backHome" class="btn-ghost small">← Home</button>
-      <h1>Practice call</h1>
-      <p class="hint">A stored sample runs locally. No microphone, no credits.</p>
-      <div id="practiceResult"></div>
+  <main id="view-practice" class="view view-dash hidden">
+    <div class="dash">
+      <aside class="side" data-side></aside>
+      <section class="main panel">
+        <h1>Practice call</h1>
+        <p class="hint">A stored sample runs through the real detector. No microphone, no credits.</p>
+        <div id="practiceResult"></div>
+      </section>
     </div>
   </main>
 
   <!-- Live result -->
-  <main id="view-live" class="view hidden">
-    <div class="card">
-      <button id="backLiveHome" class="btn-ghost small">← Home</button>
-      <h1>Live mode</h1>
-      <p class="statusline" id="liveStatus">Connecting…</p>
-      <div id="liveResult"></div>
+  <main id="view-live" class="view view-dash hidden">
+    <div class="dash">
+      <aside class="side" data-side></aside>
+      <section class="main panel">
+        <h1>Live mode</h1>
+        <p class="statusline" id="liveStatus">Connecting…</p>
+        <div id="liveResult"></div>
+      </section>
     </div>
   </main>
 
   <!-- Upload -->
-  <main id="view-upload" class="view hidden">
-    <div class="card">
-      <button id="backUploadHome" class="btn-ghost small">← Home</button>
-      <h1>Upload a recording</h1>
-      <input type="file" id="uploadFile" accept="audio/*" />
-      <button id="uploadGo" class="btn-primary">Analyse</button>
-      <div id="uploadOut"></div>
+  <main id="view-upload" class="view view-dash hidden">
+    <div class="dash">
+      <aside class="side" data-side></aside>
+      <section class="main panel">
+        <h1>Upload a recording</h1>
+        <input type="file" id="uploadFile" accept="audio/*" />
+        <button id="uploadGo" class="btn-primary">Analyse</button>
+        <div id="uploadOut"></div>
+      </section>
     </div>
   </main>
+
+  <!-- Shared sidebar (cloned into each [data-side] host) -->
+  <template id="sideTpl">
+    <div class="panel side-card">
+      <div class="user-mini">
+        <span class="avatar">?</span>
+        <div>
+          <div class="user-name">Loading…</div>
+          <div class="user-mail"></div>
+        </div>
+      </div>
+    </div>
+    <nav class="panel side-nav" aria-label="Primary">
+      <button class="nav-item" data-nav="home">🏠 Home</button>
+      <button class="nav-item" data-nav="practice">🎧 Practice call</button>
+      <button class="nav-item" data-nav="live">🔴 Go live</button>
+      <button class="nav-item" data-nav="upload">⬆️ Upload recording</button>
+    </nav>
+    <button class="btn-ghost small js-logout">Log out</button>
+  </template>
 
   <!-- Unlock bottom sheet -->
   <div id="unlockSheet" class="sheet hidden">
@@ -118,6 +182,6 @@
     </div>
   </div>
 
-  <script type="module" src="/app/app.js?v=5"></script>
+  <script type="module" src="/app/app.js?v=6"></script>
 </body>
 </html>

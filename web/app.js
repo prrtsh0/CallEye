@@ -26,9 +26,6 @@ const els = {
   practiceBtn: $("#practiceBtn"),
   liveBtn: $("#liveBtn"),
   uploadBtn: $("#uploadBtn"),
-  backHome: $("#backHome"),
-  backLiveHome: $("#backLiveHome"),
-  backUploadHome: $("#backUploadHome"),
   brandHome: $("#brandHome"),
   practiceResult: $("#practiceResult"),
   liveStatus: $("#liveStatus"),
@@ -39,7 +36,6 @@ const els = {
   unlockSubmit: $("#unlockSubmit"),
   unlockCancel: $("#unlockCancel"),
   forgetBtn: $("#forgetBtn"),
-  logoutBtn: $("#logoutBtn"),
   gName: $("#gName"),
   gPhone: $("#gPhone"),
   uploadFile: $("#uploadFile"),
@@ -80,6 +76,7 @@ function show(name) {
   if (name !== "auth" && !state.token) name = "auth";
   Object.values(routes).forEach((id) => $("#" + id).classList.add("hidden"));
   $("#" + routes[name]).classList.remove("hidden");
+  setActiveNav(name);
   if (location.hash !== "#/" + name) history.replaceState(null, "", "#/" + name);
 }
 
@@ -100,6 +97,7 @@ function updateBadge() {
     els.modeBadge.textContent = MODE_BADGE.practice;
     els.modeBadge.classList.remove("live");
   }
+  setRailState();
 }
 
 function fetchConfig() {
@@ -166,6 +164,8 @@ async function submitAuth() {
     state.token = j.token;
     state.user = j.user;
     localStorage.setItem("calleye.token", j.token);
+    populateProfile();
+    populateGuardian();
     show("home");
   } catch (e) {
     els.authMsg.textContent = "Network error. Try again.";
@@ -341,11 +341,81 @@ async function runUpload() {
   }
 }
 
+// ---- dashboard shell (sidebar + profile + rail) ----
+function buildSidebar() {
+  const tpl = document.getElementById("sideTpl");
+  if (!tpl) return;
+  document.querySelectorAll("[data-side]").forEach((host) => {
+    host.innerHTML = tpl.innerHTML;
+  });
+}
+
+function setActiveNav(name) {
+  const valid = { home: 1, practice: 1, live: 1, upload: 1 };
+  document.querySelectorAll(".nav-item[data-nav]").forEach((n) => {
+    n.classList.toggle("active", !!valid[name] && n.dataset.nav === name);
+  });
+}
+
+function setRailState() {
+  const live = !!(state.liveEnabled && state.accessCode);
+  const badge = document.getElementById("railModeBadge");
+  const hint = document.getElementById("railModeHint");
+  const sub = document.getElementById("liveCardSub");
+  if (badge) {
+    badge.textContent = live ? MODE_BADGE.live : MODE_BADGE.practice;
+    badge.classList.toggle("live", live);
+  }
+  if (hint) {
+    hint.textContent = live
+      ? "Live is unlocked — you can analyse real calls."
+      : (state.liveEnabled ? "Needs an access code from your organiser." : "Live mode is off right now.");
+  }
+  if (sub) {
+    sub.textContent = live
+      ? "Unlocked — start listening."
+      : (state.liveEnabled ? "Needs an access code from your organiser." : "Live mode is off right now.");
+  }
+}
+
+function populateProfile() {
+  const name = (state.user && state.user.name) || "Guest";
+  const email = (state.user && state.user.email) || "";
+  const initials = name.split(/\s+/).slice(0, 2).map((s) => s.charAt(0)).join("").toUpperCase() || "?";
+  document.querySelectorAll(".user-name").forEach((el) => { el.textContent = name; });
+  document.querySelectorAll(".user-mail").forEach((el) => { el.textContent = email; });
+  document.querySelectorAll(".avatar").forEach((el) => { el.textContent = initials; });
+}
+
+function populateGuardian() {
+  let g = null;
+  try { g = JSON.parse(localStorage.getItem("calleye.guardian") || "null"); } catch (e) { /* ignore */ }
+  const line = document.getElementById("guardianLine");
+  if (!line) return;
+  if (g && (g.name || g.phone)) {
+    line.textContent = [g.name, g.phone].filter(Boolean).join(" · ");
+  } else {
+    line.textContent = "Not set up yet.";
+  }
+}
+
+document.addEventListener("click", (e) => {
+  const nav = e.target.closest(".nav-item[data-nav]");
+  if (nav) { show(nav.dataset.nav); return; }
+  if (e.target.closest(".js-logout")) { logout(); }
+});
+
 // ---- events ----
 els.welcomeStart.addEventListener("click", () => show("setup"));
 els.setupSave.addEventListener("click", () => {
+  const gName = els.gName.value.trim();
+  const gPhone = els.gPhone.value.trim();
+  if (gName || gPhone) {
+    localStorage.setItem("calleye.guardian", JSON.stringify({ name: gName, phone: gPhone }));
+  }
   localStorage.setItem("calleye.setup", "1");
   state.setupDone = true;
+  populateGuardian();
   show("home");
 });
 els.practiceBtn.addEventListener("click", () => { show("practice"); playPractice(); });
@@ -358,9 +428,6 @@ els.liveBtn.addEventListener("click", () => {
   else startLive();
 });
 els.uploadBtn.addEventListener("click", () => show("upload"));
-els.backHome.addEventListener("click", () => { stopPractice(); show("home"); });
-els.backLiveHome.addEventListener("click", () => show("home"));
-els.backUploadHome.addEventListener("click", () => show("home"));
 els.brandHome.addEventListener("click", () => show("home"));
 els.unlockSubmit.addEventListener("click", submitUnlock);
 els.unlockCancel.addEventListener("click", closeUnlock);
@@ -383,6 +450,8 @@ if ("serviceWorker" in navigator && location.pathname.startsWith("/app")) {
 
 // ---- boot ----
 function boot() {
+  buildSidebar();
+  populateGuardian();
   const wasFast = checkWake();
   if (!wasFast) {
     els.modeBadge.textContent = "Waking up the app, one moment";
@@ -401,9 +470,9 @@ function boot() {
       return r.json();
     })
     .then((j) => {
-      if (j && j.user) { state.user = j.user; show(state.setupDone ? "home" : "welcome"); }
+      if (j && j.user) { state.user = j.user; populateProfile(); show(state.setupDone ? "home" : "welcome"); }
     })
-    .catch(() => show(state.setupDone ? "home" : "welcome"));
+    .catch(() => { populateProfile(); show(state.setupDone ? "home" : "welcome"); });
 }
 
 window.addEventListener("hashchange", () => {
