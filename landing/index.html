@@ -22,6 +22,8 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <div class="announce">Student challenge prototype · built with <a href="https://gnani.ai" target="_blank" rel="noopener">Gnani Prisma</a> &amp; Timbre</div>
+
   <header class="topbar">
     <a class="brand" href="/" aria-label="CallEye home">
       <span class="logo-mark" aria-hidden="true">◉</span>
@@ -46,7 +48,14 @@
         </div>
       </div>
       <div class="hero-doodle">
-        <img src="/shared/doodles/phone-doodle.svg" alt="" width="220" height="220" />
+        <div class="phone" role="img" aria-label="CallEye shows a red verdict on a live speaker call">
+          <div class="phone-top"><span class="live-dot"></span> Live · practice call</div>
+          <div class="phone-call">
+            <p>"Police here — you owe money. Send the OTP now."</p>
+            <div class="meter"><span style="width:82%"></span></div>
+            <div class="verdict red"><span>RED</span><span class="pill">Hang up</span></div>
+          </div>
+        </div>
       </div>
     </section>
 

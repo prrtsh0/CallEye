@@ -1,10 +1,11 @@
-/* CallEye design tokens — shared by the landing and the app. */
+/* CallEye design tokens — Render-inspired light/minimal palette.
+   Semantic green/amber/red for verdicts are preserved. */
 :root {
-  /* palette */
-  --navy-900: #091f40;
-  --navy-800: #0d2b57;
-  --blue: #1f5fe0;
-  --blue-ink: #163f9e;
+  /* palette (neutrals + accent aligned to a modern SaaS look) */
+  --navy-900: #0a0a0a;
+  --navy-800: #18181b;
+  --blue: #2563eb;
+  --blue-ink: #1d4ed8;
   --green: #12805c;
   --green-bg: #e5f4ed;
   --amber: #a96a00;
@@ -13,20 +14,34 @@
   --red-bg: #fbeaea;
 
   /* neutrals */
-  --bg: #e9edf4;
-  --bg-alt: #f4f7fb;
+  --bg: #ffffff;
+  --bg-alt: #fafafa;
   --card: #ffffff;
-  --ink: #16283f;
-  --muted: #5c6a7a;
-  --line: #e1e6ee;
-  --line-strong: #c6ceda;
+  --ink: #0a0a0a;
+  --muted: #52525b;
+  --line: #e5e7eb;
+  --line-strong: #d4d4d8;
 
   /* type */
   --font-sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   /* shape */
-  --radius: 14px;
-  --radius-sm: 10px;
-  --shadow: 0 1px 2px rgba(9, 31, 64, .06), 0 2px 8px rgba(9, 31, 64, .06);
+  --radius: 6px;
+  --radius-sm: 4px;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 1px 3px rgba(0, 0, 0, .06);
+
+  /* modern SaaS surface (landing) */
+  --ink-strong: #0a0a0a;
+  --ink-soft: #3f3f46;
+  --surface: #ffffff;
+  --surface-muted: #f4f4f5;
+  --line-soft: #e5e7eb;
+  --accent: #2563eb;
+  --accent-deep: #1d4ed8;
+  --accent-glow: #93c5fd;
+  --grid-line: rgba(0, 0, 0, .05);
+  --radius-lg: 12px;
+  --shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, .15);
+  --container: 1120px;
 }
