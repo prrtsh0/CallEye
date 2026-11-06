@@ -13,7 +13,7 @@ import sqlite3
 
 from fastapi import Header, HTTPException
 
-from app.db import get_connection
+from api.db import get_connection
 
 _PBKDF2_ITERATIONS = 200_000
 

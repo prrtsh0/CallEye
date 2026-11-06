@@ -20,7 +20,7 @@ jobs:
       - name: Test (pytest)
         run: pytest -q
       - name: Evaluate on test split
-        run: python -m eval.run --split test
+        run: python -m model.eval.run --split test
       - name: Upload eval report
         uses: actions/upload-artifact@v4
         with:

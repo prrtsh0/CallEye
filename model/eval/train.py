@@ -3,7 +3,7 @@ against the held-out test split.
 
 Usage: python -m eval.train
 Reads labeled calls from data/calls/train.json (train split), writes the model to
-app/detector/model.joblib, then scores the held-out test split and writes a
+model/detector/model.joblib, then scores the held-out test split and writes a
 metrics report to eval/model_report.md. If the model is absent at runtime the
 detector falls back to rules only.
 """
@@ -16,9 +16,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
-from app.config import DATA_DIR, MODEL_PATH
+from api.config import BASE_DIR, DATA_DIR, MODEL_PATH
 
-EVAL_DIR = DATA_DIR.parent / "eval"
+EVAL_DIR = BASE_DIR / "model" / "eval"
 REPORT_PATH = EVAL_DIR / "model_report.md"
 
 

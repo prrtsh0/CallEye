@@ -22,8 +22,8 @@ spec/goals. It intentionally does not duplicate `UI_SPEC.md`.
 | Path | Owner | Notes |
 | --- | --- | --- |
 | `/` | `site/` | landing, html=True |
-| `/app` | `app/static/app/` | PWA, html=True, hash routes |
-| `/shared` | `app/static/shared/` | shared ES modules + tokens |
+| `/app` | `web/` | PWA, html=True, hash routes |
+| `/shared` | `shared/` | shared ES modules + tokens |
 | `/mic-test` | route | unchanged |
 | `/healthz`, `/api/*`, `/ws/listen`, `/admin/usage` | API | unchanged |
 
@@ -33,7 +33,7 @@ app URL (`APP_URL`, default `/app/`).
 
 ## 3. Shared code (no duplication)
 
-Lives in `app/static/shared/`:
+Lives in `shared/`:
 
 - `tokens.css` — the design tokens (colours, type, shape).
 - `fonts.css` — font imports.

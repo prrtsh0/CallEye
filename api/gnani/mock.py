@@ -7,9 +7,9 @@ import asyncio
 import json
 import struct
 
-from app.config import FIXTURES_DIR, Settings
-from app.gnani.base import STTAdapter, TTSAdapter
-from app.gnani.types import STTResult, TranscriptSegment, TTSAudio, TTSRequest
+from api.config import FIXTURES_DIR, Settings
+from api.gnani.base import STTAdapter, TTSAdapter
+from api.gnani.types import STTResult, TranscriptSegment, TTSAudio, TTSRequest
 
 DEFAULT_FIXTURE = "scam_demo_digital_arrest"
 

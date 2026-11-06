@@ -1,4 +1,4 @@
-from app.detector.engine import SessionAnalyzer
+from model.detector.engine import SessionAnalyzer
 
 
 def run_call(segments):

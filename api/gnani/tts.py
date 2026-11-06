@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import httpx
 
-from app.gnani.base import TTSAdapter
-from app.gnani.types import TTSAudio, TTSRequest
+from api.gnani.base import TTSAdapter
+from api.gnani.types import TTSAudio, TTSRequest
 
 
 class TimbreTTSAdapter(TTSAdapter):

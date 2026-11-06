@@ -34,7 +34,7 @@ Notes:
 ## Automatic retraining (GitHub Actions)
 
 `.github/workflows/train.yml` retrains and re-evaluates whenever
-`data/calls/**` or `app/detector/**` change (or on manual `workflow_dispatch`):
+`data/calls/**` or `model/detector/**` change (or on manual `workflow_dispatch`):
 
 1. Add labeled transcripts to `data/calls/train.json` (scam/genuine).
 2. Push to `main`.
@@ -64,7 +64,7 @@ local runs. Secrets are never committed.
 | `DAILY_CAP_PER_DEVICE` | default 10 |
 | `GLOBAL_KILL_SWITCH` | `1` forces mock mode |
 | `CREDIT_FLOOR` / `STT_CREDITS_PER_MINUTE` | credit guards |
-| `ADMIN_TOKEN` | protects `/admin/usage` & `/admin/monitor` |
+| `ADMIN_TOKEN` | **required** to enable `/admin/usage` & `/admin/monitor` (fail-closed: without it these return 401) |
 | `ALLOWED_ORIGINS` | CORS allow-list |
 | `DATABASE_URL` | Neon Postgres DSN; empty = local SQLite |
 
@@ -78,11 +78,19 @@ By default CallEye stores users in local SQLite (`data/calleye.db`), which reset
 on Render free-tier redeploys. For persistent accounts:
 
 1. Create a free **Neon** project (no card required) and copy its connection
-   string (DSN), e.g. `postgres://user:pass@ep-….us-east-2.aws.neon.tech/db?sslmode=require`.
+   string (DSN). Use Neon's **pooled** connection string (host `-pooler` or
+   `?pgbouncer=true`) — it is built for serverless and survives cold starts.
+   e.g. `postgres://user:pass@ep-….pooler.us-east-2.aws.neon.tech/db?sslmode=require&pgbouncer=true`.
 2. In Render dashboard → your service → **Environment**, add
    `DATABASE_URL = <your Neon DSN>`.
-3. Deploy. The app now uses Postgres (`/admin/monitor` shows `backend: postgres`).
+3. Deploy. The app now uses a pooled Postgres connection (`/admin/monitor`
+   shows `backend: postgres`). Connections are pooled and retried, so the
+   first request after Neon sleeps will reconnect rather than fail.
    Existing SQLite users are not migrated automatically.
+
+> ⚠️ The admin endpoints **require `ADMIN_TOKEN`** (send it as the
+> `x-admin-token` header). Without it they are disabled (401) — configure it in
+> Render before relying on `/admin/monitor`.
 
 ## Monitoring & uptime
 

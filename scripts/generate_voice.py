@@ -16,12 +16,12 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from app.config import STATIC_DIR, get_settings  # noqa: E402
-from app.gnani import get_tts_adapter  # noqa: E402
-from app.gnani.types import TTSRequest  # noqa: E402
+from api.config import APP_DIR, get_settings  # noqa: E402
+from api.gnani import get_tts_adapter  # noqa: E402
+from api.gnani.types import TTSRequest  # noqa: E402
 
-VOICE_LINES = STATIC_DIR / "i18n" / "voice_lines.json"
-AUDIO_DIR = STATIC_DIR / "audio"
+VOICE_LINES = APP_DIR / "i18n" / "voice_lines.json"
+AUDIO_DIR = APP_DIR / "audio"
 
 _EXT = {"audio/mpeg": "mp3", "audio/wav": "wav", "audio/ogg": "ogg"}
 

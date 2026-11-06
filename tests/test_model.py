@@ -12,12 +12,12 @@ from pathlib import Path
 import joblib
 from fastapi.testclient import TestClient
 
-from app.main import app
+from api.main import app
 
 client = TestClient(app)
 
 BASE = Path(__file__).resolve().parent.parent
-MODEL_PATH = BASE / "app/detector/model.joblib"
+MODEL_PATH = BASE / "model/detector/model.joblib"
 
 
 def _load_split(name):
@@ -55,7 +55,7 @@ def test_analyze_endpoint_returns_p_scam(auth_client):
 def test_training_script_imports_and_runs_train_func():
     # Ensure the training pipeline is importable and can train/evaluate on the
     # labeled data without a network.
-    train = importlib.import_module("eval.train")
+    train = importlib.import_module("model.eval.train")
     rows = train.load_labeled("train")
     assert len(rows) >= 4
     vectorizer, model = train.train(rows)

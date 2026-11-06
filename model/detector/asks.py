@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import re
 
-from app.detector.lexicon import PlaybookLexicon
-from app.detector.normalize import normalize
+from model.detector.lexicon import PlaybookLexicon
+from model.detector.normalize import normalize
 
 _WINDOW = 6
 _SENT_SPLIT = re.compile(r"[.!?।]")

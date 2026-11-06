@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 
-from app.detector.lexicon import PlaybookLexicon
+from model.detector.lexicon import PlaybookLexicon
 
 HALF_LIFE = 20.0
 

@@ -10,9 +10,9 @@ import argparse
 import json
 from pathlib import Path
 
-from app.config import DATA_DIR
-from app.detector.engine import SessionAnalyzer
-from eval.metrics import CallResult, summarize
+from api.config import DATA_DIR
+from model.detector.engine import SessionAnalyzer
+from model.eval.metrics import CallResult, summarize
 
 
 def load_calls(split: str) -> list[dict]:

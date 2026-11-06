@@ -3,13 +3,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from app.detector.asks import would_never_ask
-from app.detector.classifier import ScamClassifier
-from app.detector.decision import DecisionEngine
-from app.detector.levers import detect_lever
-from app.detector.lexicon import PlaybookLexicon
-from app.detector.pressure import PressureMeter
-from app.detector.stages import detect_stages
+from model.detector.asks import would_never_ask
+from model.detector.classifier import ScamClassifier
+from model.detector.decision import DecisionEngine
+from model.detector.levers import detect_lever
+from model.detector.lexicon import PlaybookLexicon
+from model.detector.pressure import PressureMeter
+from model.detector.stages import detect_stages
 
 
 @dataclass

@@ -1,12 +1,12 @@
 """Factory that returns the right adapters for the current mode."""
 from __future__ import annotations
 
-from app.config import Settings
-from app.gnani.base import STTAdapter, TTSAdapter
-from app.gnani.file import FileSTTAdapter
-from app.gnani.mock import MockSTTAdapter, MockTTSAdapter
-from app.gnani.realtime import RealtimeSTTAdapter
-from app.gnani.tts import TimbreTTSAdapter
+from api.config import Settings
+from api.gnani.base import STTAdapter, TTSAdapter
+from api.gnani.file import FileSTTAdapter
+from api.gnani.mock import MockSTTAdapter, MockTTSAdapter
+from api.gnani.realtime import RealtimeSTTAdapter
+from api.gnani.tts import TimbreTTSAdapter
 
 
 def get_stt_adapter(settings: Settings) -> STTAdapter:

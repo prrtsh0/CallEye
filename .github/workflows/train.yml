@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "data/calls/**"
-      - "app/detector/**"
+      - "model/detector/**"
   workflow_dispatch:
 
 jobs:
@@ -24,10 +24,10 @@ jobs:
           pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Train classifier on train split
-        run: python -m eval.train
+        run: python -m model.eval.train
 
       - name: Evaluate on held-out test split
-        run: python -m eval.run --split test
+        run: python -m model.eval.run --split test
 
       - name: Upload eval report
         uses: actions/upload-artifact@v4

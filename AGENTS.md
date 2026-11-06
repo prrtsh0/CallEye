@@ -26,22 +26,25 @@ verdict.
 ## Layout
 
 ```
-app/
+api/
   main.py            FastAPI app (HTTP, static, admin)
   relay.py           /ws/listen WebSocket relay
   config.py          pydantic-settings, .env.example
+  auth.py db.py      user store + sessions (SQLite or Neon Postgres)
+  guard.py           guardian alerts
   gnani/             ALL Gnani code (mock + real adapters). Nothing else may
                      know a Gnani URL, header, or field name.
+model/
   detector/          normalize, lexicon, stages, pressure, asks, levers,
                      classifier, decision, engine; playbooks/ (YAML)
-  static/            PWA frontend (index.html, app.js, styles.css,
+  eval/              train.py (model git-ignored) + run.py → reports
+web/                 installable PWA (index.html, app.js, styles.css,
                      audio-processor.js, mic-test.html, manifest, sw)
+landing/             public landing (index.html, docs.html, assets)
+shared/              shared CSS/JS modules used by web + landing
 data/
   calls/             labeled scripted-call splits (train.json, test.json)
   fixtures/          recorded transcripts for mock mode
-eval/
-  run.py             evaluation harness -> eval/report.md
-  train.py           optional classifier training (model is git-ignored)
 scripts/
   generate_voice.py  pre-build TTS voice clips (Timbre / mock)
   smoke.py           deployment smoke test
@@ -51,13 +54,13 @@ tests/               pytest suite
 ## Hard rules
 
 - **Gnani isolation:** all Gnani specifics (endpoints, headers, fields) live in
-  `app/gnani/`. The Gnani key must never reach the browser. If a change invents
-  a Gnani endpoint/header/field, send it back to `app/gnani/`.
+  `api/gnani/`. The Gnani key must never reach the browser. If a change invents
+  a Gnani endpoint/header/field, send it back to `api/gnani/`.
 - **Mock mode first:** every feature must work in mock mode
   (`GNANI_MODE=mock`), which replays `data/fixtures`. Development and CI use
   zero credits.
 - **No secrets:** never commit a real `.env`. Commit only `.env.example`.
-  Keep `app/detector/model.joblib` git-ignored.
+  Keep `model/detector/model.joblib` git-ignored.
 - **Never tune on the test split:** the training script only reads
   `data/calls/train.json`; the test split must never influence the classifier.
 - **Honesty:** never claim certainty. Green means "no warning signs so far",
@@ -69,14 +72,14 @@ tests/               pytest suite
 ```bash
 pip install -r requirements.txt -r requirements-dev.txt
 cp .env.example .env
-uvicorn app.main:app --reload          # http://localhost:8000
+uvicorn api.main:app --reload          # http://localhost:8000
 ```
 
 Check:
 
 ```bash
 pytest -q
-python -m eval.run --split test
+python -m model.eval.run --split test
 ruff check .
 python scripts/smoke.py http://localhost:8000
 ```

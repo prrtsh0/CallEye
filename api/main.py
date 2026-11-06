@@ -9,22 +9,21 @@ from fastapi import Depends, FastAPI, File, Header, HTTPException, Request, Uplo
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.auth import create_user, issue_token, require_user, revoke_token, user_by_email
-from app.config import (
+from api.auth import create_user, issue_token, require_user, revoke_token, user_by_email
+from api.config import (
     APP_DIR,
     FIXTURES_DIR,
+    LANDING_DIR,
     SHARED_DIR,
-    SITE_DIR,
-    STATIC_DIR,
     Settings,
     get_settings,
 )
-from app.db import backend_name, get_connection, init_db
-from app.detector.engine import SessionAnalyzer
-from app.gnani.credits import CreditTracker
-from app.gnani.factory import get_file_stt_adapter
-from app.guard import GuardManager
-from app.relay import RelayHandler
+from api.db import backend_name, get_connection, init_db
+from api.gnani.credits import CreditTracker
+from api.gnani.factory import get_file_stt_adapter
+from api.guard import GuardManager
+from api.relay import RelayHandler
+from model.detector.engine import SessionAnalyzer
 
 LANGUAGES = ["hi", "hi-latn", "en"]
 
@@ -76,7 +75,7 @@ async def signup(body: dict):
 async def login(body: dict):
     email = (body.get("email") or "").strip().lower()
     password = body.get("password") or ""
-    from app.auth import verify_password  # noqa: PLC0415  (avoids circular import)
+    from api.auth import verify_password  # noqa: PLC0415  (avoids circular import)
     user = user_by_email(email)
     if not user or not verify_password(password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="invalid email or password")
@@ -224,20 +223,27 @@ async def ws_listen(websocket: WebSocket):
     await RelayHandler(websocket, settings, guard).run()
 
 
-@app.get("/admin/usage")
-async def admin_usage(request: Request):
-    token = request.headers.get("x-admin-token") or ""
-    if settings.admin_token and token != settings.admin_token:
+def require_admin(x_admin_token: str = Header(default="")) -> None:
+    """Fail-closed guard for /admin/* routes: always requires a matching
+    ADMIN_TOKEN; when none is configured the admin endpoints stay disabled."""
+    expected = settings.admin_token
+    if not expected:
+        raise HTTPException(
+            status_code=401,
+            detail="ADMIN_TOKEN is not configured; admin endpoints are disabled",
+        )
+    if x_admin_token != expected:
         raise HTTPException(status_code=401, detail="invalid admin token")
+
+
+@app.get("/admin/usage", dependencies=[Depends(require_admin)])
+async def admin_usage():
     return {"guard": guard.usage(), "credits": credits.snapshot()}
 
 
-@app.get("/admin/monitor")
-async def admin_monitor(request: Request):
+@app.get("/admin/monitor", dependencies=[Depends(require_admin)])
+async def admin_monitor():
     """Numbers-only health/monitor stats (no PII, no transcripts)."""
-    token = request.headers.get("x-admin-token") or ""
-    if settings.admin_token and token != settings.admin_token:
-        raise HTTPException(status_code=401, detail="invalid admin token")
     users = sessions = 0
     try:
         with get_connection() as conn:
@@ -256,12 +262,12 @@ async def admin_monitor(request: Request):
 
 @app.get("/mic-test")
 async def mic_test():
-    return FileResponse(STATIC_DIR / "mic-test.html")
+    return FileResponse(APP_DIR / "mic-test.html")
 
 
 @app.get("/docs")
 async def docs_page():
-    return FileResponse(SITE_DIR / "docs.html")
+    return FileResponse(LANDING_DIR / "docs.html")
 
 
 # Shared static assets (tokens, doodles, result-view module). Mounted before
@@ -275,4 +281,4 @@ app.mount("/data/fixtures", StaticFiles(directory=FIXTURES_DIR), name="fixtures"
 app.mount("/app", StaticFiles(directory=APP_DIR, html=True), name="app")
 
 # Public landing at / (must be mounted after API routes).
-app.mount("/", StaticFiles(directory=SITE_DIR, html=True), name="site")
+app.mount("/", StaticFiles(directory=LANDING_DIR, html=True), name="site")

@@ -11,10 +11,10 @@ import json
 
 from fastapi import WebSocket
 
-from app.config import Settings
-from app.detector.engine import SessionAnalyzer
-from app.gnani import get_stt_adapter
-from app.guard import GuardManager
+from api.config import Settings
+from api.gnani import get_stt_adapter
+from api.guard import GuardManager
+from model.detector.engine import SessionAnalyzer
 
 
 class RelayHandler:
@@ -74,7 +74,7 @@ class RelayHandler:
         device_id = start.get("device_id", "")
 
         # User auth: the start message must carry a valid session token.
-        from app.auth import user_by_token  # noqa: PLC0415  (avoids circular import)
+        from api.auth import user_by_token  # noqa: PLC0415  (avoids circular import)
         token = start.get("token") or ""
         if not user_by_token(token):
             await self.ws.send_text(json.dumps({"type": "error", "code": "auth_required"}))

@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import httpx
 
-from app.gnani.base import STTAdapter
-from app.gnani.types import STTResult, TranscriptSegment
+from api.gnani.base import STTAdapter
+from api.gnani.types import STTResult, TranscriptSegment
 
 
 class FileSTTAdapter(STTAdapter):

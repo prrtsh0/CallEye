@@ -6,12 +6,12 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from app.main import _UNLOCK_ATTEMPTS, app, settings
+from api.main import _UNLOCK_ATTEMPTS, app, settings
 
 client = TestClient(app)
 
 BASE = Path(__file__).resolve().parent.parent
-SITE = BASE / "site"
+SITE = BASE / "landing"
 
 
 # ---------- routing ----------

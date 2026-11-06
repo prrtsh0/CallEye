@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import joblib
 
-from app.config import MODEL_PATH
+from api.config import MODEL_PATH
 
 
 class ScamClassifier:

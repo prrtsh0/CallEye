@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
+from api.main import app, settings
 
 client = TestClient(app)
 
@@ -48,13 +48,15 @@ def test_analyze_requires_auth(client):
     assert r.status_code == 401
 
 
-def test_admin_usage_requires_token():
-    r = client.get("/admin/usage")
-    assert r.status_code == 200  # no token configured => open
+def test_admin_routes_require_token(client):
+    assert client.get("/admin/usage").status_code == 401
+    assert client.get("/admin/monitor").status_code == 401
+    assert client.get("/admin/monitor", headers={"x-admin-token": "wrong"}).status_code == 401
 
 
-def test_admin_monitor_returns_numbers_only():
-    r = client.get("/admin/monitor")
+def test_admin_monitor_with_valid_token(client, monkeypatch):
+    monkeypatch.setattr(settings, "admin_token", "secret")
+    r = client.get("/admin/monitor", headers={"x-admin-token": "secret"})
     assert r.status_code == 200
     data = r.json()
     assert {"users", "sessions", "calls", "backend", "uptime_s"} <= set(data)

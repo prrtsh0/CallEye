@@ -4,7 +4,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections.abc import AsyncIterator, Callable
 
-from app.gnani.types import TTSAudio, TTSRequest
+from api.gnani.types import TTSAudio, TTSRequest
 
 # A callback receiving each live transcript segment as it is produced.
 OnSegment = Callable[[str, bool, float], None]

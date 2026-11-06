@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
+from api.main import app
 
 TEST_EMAIL = "tester@calleye.dev"
 TEST_PASS = "correct-horse-battery"  # noqa: S105  (test fixture, not a secret)

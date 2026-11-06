@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import yaml
 
-from app.config import PLAYBOOKS_DIR
-from app.detector.normalize import normalize
+from api.config import PLAYBOOKS_DIR
+from model.detector.normalize import normalize
 
 _CATEGORIES = ("authority", "fear", "isolation", "urgency", "ask",
                "would_never", "money_demand", "warning_cues", "emergency",

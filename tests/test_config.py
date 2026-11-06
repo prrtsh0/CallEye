@@ -1,4 +1,4 @@
-from app.config import Settings
+from api.config import Settings
 
 
 def test_defaults():

@@ -1,8 +1,8 @@
 import asyncio
 
-from app.config import Settings
-from app.gnani import get_stt_adapter, get_tts_adapter
-from app.gnani.types import TTSRequest
+from api.config import Settings
+from api.gnani import get_stt_adapter, get_tts_adapter
+from api.gnani.types import TTSRequest
 
 
 def test_mock_stt_streams_segments():

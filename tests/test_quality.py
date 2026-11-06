@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from app.config import BASE_DIR, DATA_DIR
+from api.config import BASE_DIR, DATA_DIR
 
 
 def _ids(path: Path):

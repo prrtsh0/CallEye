@@ -11,12 +11,12 @@ venv/
 .pytest_cache/
 .ruff_cache/
 
-# Build artifacts / generated media (keep voice clips under app/static/audio)
+# Build artifacts / generated media (keep voice clips under web/audio)
 *.log
 *.mp3
 *.wav
-!app/static/audio/**
-app/detector/model.joblib
+!web/audio/**
+model/detector/model.joblib
 
 # Local user database (contains password hashes; never commit)
 data/calleye.db

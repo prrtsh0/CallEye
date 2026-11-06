@@ -12,8 +12,8 @@ import json
 
 import websockets
 
-from app.gnani.base import STTAdapter
-from app.gnani.types import STTResult
+from api.gnani.base import STTAdapter
+from api.gnani.types import STTResult
 
 
 class RealtimeSTTAdapter(STTAdapter):

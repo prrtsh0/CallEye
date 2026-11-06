@@ -1,7 +1,7 @@
 """Lever identification (what the scam is leaning on)."""
 from __future__ import annotations
 
-from app.detector.lexicon import PlaybookLexicon
+from model.detector.lexicon import PlaybookLexicon
 
 
 def detect_lever(lexicon: PlaybookLexicon, text: str) -> str:

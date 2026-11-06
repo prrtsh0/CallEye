@@ -141,7 +141,7 @@ Family safe word note. One Save button.
   teaches the model honestly.
 
 ## 7. Files
-- `app/static/index.html` — SPA shell (all screens except mic-test).
-- `app/static/styles.css` — single stylesheet (this system).
-- `app/static/app.js` — screen switching + app logic.
-- `app/static/mic-test.html` — standalone mic check page.
+- `web/index.html` — SPA shell (all screens except mic-test).
+- `web/styles.css` — single stylesheet (this system).
+- `web/app.js` — screen switching + app logic.
+- `web/mic-test.html` — standalone mic check page.

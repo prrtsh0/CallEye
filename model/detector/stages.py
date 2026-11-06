@@ -1,7 +1,7 @@
 """Stage tracking: authority, fear, isolation, urgency, ask."""
 from __future__ import annotations
 
-from app.detector.lexicon import PlaybookLexicon
+from model.detector.lexicon import PlaybookLexicon
 
 STAGES = ("authority", "fear", "isolation", "urgency", "ask")
 

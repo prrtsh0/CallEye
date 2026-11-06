@@ -8,7 +8,7 @@ from __future__ import annotations
 import threading
 import time
 
-from app.config import Settings
+from api.config import Settings
 
 
 class GuardManager:

@@ -10,16 +10,15 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Root of the project (one level up from app/).
+# Root of the project (one level up from api/).
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 FIXTURES_DIR = DATA_DIR / "fixtures"
-STATIC_DIR = BASE_DIR / "app" / "static"
-SITE_DIR = BASE_DIR / "site"                      # public landing
-SHARED_DIR = STATIC_DIR / "shared"                # shared ES modules / tokens
-APP_DIR = STATIC_DIR / "app"                      # installable PWA
-PLAYBOOKS_DIR = BASE_DIR / "app" / "detector" / "playbooks"
-MODEL_PATH = BASE_DIR / "app" / "detector" / "model.joblib"
+LANDING_DIR = BASE_DIR / "landing"                # public landing
+SHARED_DIR = BASE_DIR / "shared"                  # shared ES modules / tokens
+APP_DIR = BASE_DIR / "web"                        # installable PWA
+PLAYBOOKS_DIR = BASE_DIR / "model" / "detector" / "playbooks"
+MODEL_PATH = BASE_DIR / "model" / "detector" / "model.joblib"
 
 
 class Settings(BaseSettings):

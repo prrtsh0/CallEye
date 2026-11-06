@@ -10,7 +10,7 @@ the start.
 1. **Gnani key exposure** — `HIGH`.
    The key is only needed server-side. The browser never receives it because all
    Gnani calls go through the `/ws/listen` relay (`app/relay.py`) and the
-   adapter layer (`app/gnani/`). The render only ever sees `app/static/`.
+   adapter layer (`api/gnani/`). The render only ever sees `web/` and `landing/`.
    *Status: mitigated by design.*
 
 2. **Audio / transcript persistence** — `HIGH`.
