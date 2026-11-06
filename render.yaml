@@ -12,17 +12,18 @@ services:
       # Mock mode = zero STT credits. Flip to "live" when you have real Gnani
       # credentials (set via the secret env vars below, never in chat).
       - key: GNANI_MODE
-        value: mock
+        value: live
       # Invite codes for live mode (comma-separated). Leave empty for open.
       - key: INVITE_CODES
-        value: ""
+        value: DEMO123
       # --- Gnani Prisma live STT ---
-      # Paste the real values in the Render dashboard (Service > Environment),
-      # NOT in this file and NOT in chat.
+      # Paste the real SECRETS (API key) in the Render dashboard (Service >
+      # Environment) — never in this file and never in chat. The non-secret
+      # STT endpoint has a documented default below.
       - key: GNANI_API_KEY
         sync: false
       - key: GNANI_STT_WS_URL
-        sync: false
+        value: wss://api.vachana.ai/stt/v3
       - key: GNANI_TTS_URL
         sync: false
       # --- Gnani Evon reasoning (explanations) ---

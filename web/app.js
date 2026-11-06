@@ -401,7 +401,21 @@ function populateGuardian() {
 
 document.addEventListener("click", (e) => {
   const nav = e.target.closest(".nav-item[data-nav]");
-  if (nav) { show(nav.dataset.nav); return; }
+  if (nav) {
+    // "Go live" must respect the same live gate as the Home button:
+    // live-off -> hint, locked -> unlock sheet, unlocked -> start.
+    if (nav.dataset.nav === "live") {
+      setActiveNav("live");
+      if (!state.liveEnabled) {
+        els.settingsHint.textContent = "Live mode is off right now.";
+        return;
+      }
+      if (!state.accessCode) { openUnlock(); } else { startLive(); }
+      return;
+    }
+    show(nav.dataset.nav);
+    return;
+  }
   if (e.target.closest(".js-logout")) { logout(); }
 });
 
