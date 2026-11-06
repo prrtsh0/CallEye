@@ -1,0 +1,68 @@
+{
+  "source": "eval/report.md",
+  "metrics": {
+    "Calls evaluated": "12",
+    "Scam calls": "6",
+    "Genuine calls": "6",
+    "Precision": "0.857",
+    "Recall": "1.0",
+    "Accuracy": "0.917",
+    "False red": "0",
+    "False amber": "1",
+    "Avg time-to-alert (s)": "-3.17",
+    "id": "label",
+    "t01_digital_arrest": "scam",
+    "t02_kyc_block": "scam",
+    "t03_fake_job_fee": "scam",
+    "t04_otp_fraud": "scam",
+    "t05_lottery_prize": "scam",
+    "t06_relatives_emergency": "scam",
+    "g01_bank_otp_warning": "genuine",
+    "g02_delivery": "genuine",
+    "g03_family": "genuine",
+    "g04_hospital_emergency": "genuine",
+    "g05_telecom": "genuine",
+    "g06_school_meeting": "genuine"
+  },
+  "misclassifications": [
+    "g04_hospital_emergency"
+  ],
+  "calls": [
+    {
+      "id": "t01_digital_arrest",
+      "label": "scam",
+      "final": "red",
+      "time_to_alert": "0.0"
+    },
+    {
+      "id": "t02_kyc_block",
+      "label": "scam",
+      "final": "red",
+      "time_to_alert": "-3.0"
+    },
+    {
+      "id": "t03_fake_job_fee",
+      "label": "scam",
+      "final": "red",
+      "time_to_alert": "-2.0"
+    },
+    {
+      "id": "t04_otp_fraud",
+      "label": "scam",
+      "final": "red",
+      "time_to_alert": "0.0"
+    },
+    {
+      "id": "t05_lottery_prize",
+      "label": "scam",
+      "final": "amber",
+      "time_to_alert": "-4.0"
+    },
+    {
+      "id": "t06_relatives_emergency",
+      "label": "scam",
+      "final": "amber",
+      "time_to_alert": "-10.0"
+    }
+  ]
+}

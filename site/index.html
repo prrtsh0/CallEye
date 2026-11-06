@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>CallEye — check the call before you act</title>
+
+  <!-- Preview tags -->
+  <meta name="description" content="CallEye listens to a call that feels off and tells you — in a calm colour — whether it shows scam signs." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="CallEye — check the call before you act" />
+  <meta property="og:description" content="A calm, honest pressure-call reader. Slow the scam down." />
+  <meta property="og:image" content="/assets/og-image.png" />
+  <meta property="og:url" content="/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CallEye" />
+  <meta name="twitter:description" content="Calm, honest pressure-call scam reader." />
+  <meta name="twitter:image" content="/assets/og-image.png" />
+
+  <link rel="stylesheet" href="/shared/fonts.css" />
+  <link rel="stylesheet" href="/shared/tokens.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="CallEye home">
+      <span class="logo-mark" aria-hidden="true">◉</span>
+      <span class="logo-text">CallEye</span>
+    </a>
+    <div class="top-links">
+      <a class="top-link" href="/docs">Docs</a>
+      <a class="app-link" href="/app/" rel="noopener">Open the app</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Speakerphone safety companion</p>
+        <h1>Slow the scam down.</h1>
+        <p class="sub">A calm, honest reader for calls that feel off.</p>
+        <div class="cta-row">
+          <a class="btn-primary" href="/app/">Open the app</a>
+          <a class="btn-ghost" href="#demo">Watch a sample call</a>
+        </div>
+      </div>
+      <div class="hero-doodle">
+        <img src="/shared/doodles/phone-doodle.svg" alt="" width="220" height="220" />
+      </div>
+    </section>
+
+    <!-- Demo -->
+    <section class="demo" id="demo">
+      <div class="section-head">
+        <h2>Watch a sample call</h2>
+        <p>Three scripted calls, played locally by the same reader. Captions run
+        automatically; tap a sample to begin. No microphone, no recording.</p>
+      </div>
+      <div class="demo-grid">
+        <article class="sample" data-fixture="demo_digital_arrest">
+          <div class="sample-tag tag-scam">Scam</div>
+          <h3>Digital-arrest call</h3>
+          <p>"Police" + a case + arrest + "don't tell anyone" + a request for an
+          OTP and money. The classic pressure pattern.</p>
+          <button class="run-sample">Play this sample</button>
+        </article>
+        <article class="sample" data-fixture="demo_emergency">
+          <div class="sample-tag tag-amber">Emergency</div>
+          <h3>An emergency claim</h3>
+          <p>A hospital call about a family member. CallEye can't know if it's
+          real, so it shows the verify-first screen.</p>
+          <button class="run-sample">Play this sample</button>
+        </article>
+        <article class="sample" data-fixture="demo_genuine_bank">
+          <div class="sample-tag tag-genuine">Real warning</div>
+          <h3>A genuine bank call</h3>
+          <p>Same words, opposite meaning: a warning to keep your OTP secret.
+          This one should stay green.</p>
+          <button class="run-sample">Play this sample</button>
+        </article>
+      </div>
+
+      <div class="result-card" id="demoResult" aria-live="polite">
+        <p class="result-empty">Pick a sample above to watch it run.</p>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how">
+      <div class="section-head">
+        <h2>How it works</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">01</span>
+          <p class="step-title">Put it on speaker</p>
+          <p class="step-text">CallEye reads the call through the phone mic.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <p class="step-title">It reads the pressure</p>
+          <p class="step-text">Authority, fear, isolation, urgency, and asks.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <p class="step-title">You decide calmly</p>
+          <p class="step-text">Green, amber, or red — plus what to do next.</p>
+        </div>
+      </div>
+
+      <div class="who-grid">
+        <div class="who-card"><h3>For families</h3><p>Help elders spot pressure calls.</p></div>
+        <div class="who-card"><h3>For students</h3><p>A safe way to learn the patterns.</p></div>
+        <div class="who-card"><h3>For workplaces</h3><p>Practice against social-engineering calls.</p></div>
+      </div>
+
+      <div class="promise-grid">
+        <div class="promise-card">
+          <h3>Privacy promise</h3>
+          <p>No audio and no transcript are stored. CallEye never claims you're safe.</p>
+        </div>
+        <div class="promise-card">
+          <h3>Limits</h3>
+          <p>It works on speakerphone, can be wrong, and cannot hang up for you. It
+          is not a substitute for checking.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Evaluation (only if a report exists) -->
+    <section class="eval hidden" id="evalSection">
+      <div class="section-head">
+        <h2>Evaluation</h2>
+      </div>
+      <div id="evalBody" class="eval-body"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Built with Gnani Prisma and Timbre.</p>
+    <div class="footer-links">
+      <a href="https://github.com/prrtsh0/CallEye" target="_blank" rel="noopener">GitHub</a>
+      <a href="/docs">Docs</a>
+      <a href="/app/" rel="noopener">App</a>
+      <a href="/mic-test">Microphone test</a>
+    </div>
+  </footer>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

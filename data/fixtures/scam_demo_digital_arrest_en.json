@@ -1,0 +1,15 @@
+{
+  "id": "scam_demo_digital_arrest_en",
+  "lang": "en",
+  "label": "scam",
+  "source": "script",
+  "segments": [
+    {"t": 0.0, "text": "Hello, this is the police station calling"},
+    {"t": 3.2, "text": "A case has been registered in your name"},
+    {"t": 6.5, "text": "This is very serious, you could be arrested"},
+    {"t": 9.8, "text": "Don't tell anyone, or the case will get worse"},
+    {"t": 13.0, "text": "You must make a payment right now to release bail"},
+    {"t": 16.5, "text": "I need your OTP to verify your identity"},
+    {"t": 19.8, "text": "Do it immediately, do not delay"}
+  ]
+}

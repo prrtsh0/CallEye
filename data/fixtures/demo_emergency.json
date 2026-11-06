@@ -1,0 +1,13 @@
+{
+  "id": "demo_emergency",
+  "lang": "en",
+  "label": "emergency",
+  "source": "script",
+  "segments": [
+    {"t": 0.0, "text": "This is St Mary's Hospital calling"},
+    {"t": 3.0, "text": "Your father has been in an accident"},
+    {"t": 6.0, "text": "He is here in the emergency wing"},
+    {"t": 9.0, "text": "Please come immediately to the hospital"},
+    {"t": 12.0, "text": "Call this number back to confirm the details"}
+  ]
+}

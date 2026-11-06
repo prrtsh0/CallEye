@@ -1,0 +1,13 @@
+{
+  "id": "scam_kyc_fake_job_en",
+  "lang": "en",
+  "label": "scam",
+  "source": "script",
+  "segments": [
+    {"t": 0.0, "text": "It is time to update your KYC details"},
+    {"t": 3.0, "text": "Your account will be blocked today if you do not update"},
+    {"t": 6.0, "text": "You need to pay a processing fee for the job"},
+    {"t": 9.0, "text": "I need your CVV and debit card details"},
+    {"t": 12.0, "text": "It has to be done today, tomorrow will be too late"}
+  ]
+}

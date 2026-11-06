@@ -15,6 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 FIXTURES_DIR = DATA_DIR / "fixtures"
 STATIC_DIR = BASE_DIR / "app" / "static"
+SITE_DIR = BASE_DIR / "site"                      # public landing
+SHARED_DIR = STATIC_DIR / "shared"                # shared ES modules / tokens
+APP_DIR = STATIC_DIR / "app"                      # installable PWA
 PLAYBOOKS_DIR = BASE_DIR / "app" / "detector" / "playbooks"
 MODEL_PATH = BASE_DIR / "app" / "detector" / "model.joblib"
 
@@ -47,6 +50,9 @@ class Settings(BaseSettings):
     allowed_origins: str = ""  # comma separated
     log_level: str = "info"
 
+    # Landing/app --------------------------------------------------------
+    app_url: str = "/app/"  # single config value for the app URL (landing uses this)
+
     @property
     def effective_mode(self) -> str:
         """Kill switch forces mock mode regardless of gnani_mode."""
@@ -55,6 +61,11 @@ class Settings(BaseSettings):
     @property
     def invite_code_set(self) -> set[str]:
         return {c.strip().upper() for c in self.invite_codes.split(",") if c.strip()}
+
+    @property
+    def live_enabled(self) -> bool:
+        """Live mode requires gnani_mode=live AND at least one invite code."""
+        return self.effective_mode == "live" and bool(self.invite_code_set)
 
     @property
     def origin_list(self) -> list[str]:

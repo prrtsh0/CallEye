@@ -1,0 +1,12 @@
+{
+  "id": "genuine_bank_otp_warning_en",
+  "lang": "en",
+  "label": "genuine",
+  "source": "script",
+  "segments": [
+    {"t": 0.0, "text": "Hello, there has been a transaction on your bank account"},
+    {"t": 3.0, "text": "Never share your OTP with anyone"},
+    {"t": 6.2, "text": "The bank never asks for your OTP"},
+    {"t": 9.4, "text": "If you did not make this transaction, tell us immediately"}
+  ]
+}

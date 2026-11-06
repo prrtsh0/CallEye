@@ -1,0 +1,10 @@
+{
+  "name": "CallEye",
+  "short_name": "CallEye",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "background_color": "#e9edf4",
+  "theme_color": "#091f40",
+  "description": "Realtime pressure-call scam reader (practice + live)."
+}

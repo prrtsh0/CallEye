@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="CallEye — check the call before you act." />
+  <title>CallEye</title>
+  <link rel="manifest" href="/app/manifest.webmanifest" />
+  <link rel="stylesheet" href="/shared/fonts.css" />
+  <link rel="stylesheet" href="/shared/tokens.css" />
+  <link rel="stylesheet" href="/app/styles.css?v=1" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="brand" id="brandHome">
+      <span class="logo-mark" aria-hidden="true">◉</span>
+      <span class="logo-text">CallEye</span>
+    </span>
+    <span class="mode-badge" id="modeBadge">Practice mode: no microphone, no credits</span>
+  </header>
+
+  <!-- Welcome (first run) -->
+  <main id="view-welcome" class="view hidden">
+    <div class="card center">
+      <h1>Welcome to CallEye</h1>
+      <p>A calm, honest reader for pressure-call scams. You start in Practice
+      mode — no microphone, no credits. Live mode needs an access code.</p>
+      <button id="welcomeStart" class="btn-primary">Get started</button>
+    </div>
+  </main>
+
+  <!-- Setup wizard -->
+  <main id="view-setup" class="view hidden">
+    <div class="card">
+      <h1>Setup</h1>
+      <label>Guardian name <input id="gName" type="text" placeholder="e.g. Ramesh" /></label>
+      <label>Guardian phone (with country code) <input id="gPhone" type="tel" placeholder="+91 …" /></label>
+      <p class="hint">The guardian gets a notice if a call turns red. Your details
+      stay on this device only.</p>
+      <button id="setupSave" class="btn-primary">Done</button>
+    </div>
+  </main>
+
+  <!-- Home -->
+  <main id="view-home" class="view hidden">
+    <div class="card">
+      <h1>Home</h1>
+      <div class="action-grid">
+        <button id="practiceBtn" class="btn-primary">Try a practice call</button>
+        <button id="liveBtn" class="btn-ghost">Go live</button>
+        <button id="uploadBtn" class="btn-ghost">Upload a recording</button>
+      </div>
+      <div class="settings-box">
+        <h2>Settings</h2>
+        <button id="forgetBtn" class="btn-ghost small">Forget access code</button>
+        <p class="hint" id="settingsHint"></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Practice result -->
+  <main id="view-practice" class="view hidden">
+    <div class="card">
+      <button id="backHome" class="btn-ghost small">← Home</button>
+      <h1>Practice call</h1>
+      <p class="hint">A stored sample runs locally. No microphone, no credits.</p>
+      <div id="practiceResult"></div>
+    </div>
+  </main>
+
+  <!-- Live result -->
+  <main id="view-live" class="view hidden">
+    <div class="card">
+      <button id="backLiveHome" class="btn-ghost small">← Home</button>
+      <h1>Live mode</h1>
+      <p class="statusline" id="liveStatus">Connecting…</p>
+      <div id="liveResult"></div>
+    </div>
+  </main>
+
+  <!-- Upload -->
+  <main id="view-upload" class="view hidden">
+    <div class="card">
+      <button id="backUploadHome" class="btn-ghost small">← Home</button>
+      <h1>Upload a recording</h1>
+      <input type="file" id="uploadFile" accept="audio/*" />
+      <button id="uploadGo" class="btn-primary">Analyse</button>
+      <div id="uploadOut"></div>
+    </div>
+  </main>
+
+  <!-- Unlock bottom sheet -->
+  <div id="unlockSheet" class="sheet hidden">
+    <div class="sheet-card">
+      <h2>Enter access code</h2>
+      <p class="hint">Live mode needs an access code provided by your organiser.</p>
+      <input id="unlockInput" type="password" placeholder="Access code" autocomplete="off" />
+      <p id="unlockMsg" class="msg"></p>
+      <div class="sheet-actions">
+        <button id="unlockSubmit" class="btn-primary">Unlock live</button>
+        <button id="unlockCancel" class="btn-ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/app/app.js?v=5"></script>
+</body>
+</html>
