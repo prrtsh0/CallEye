@@ -9,10 +9,19 @@ services:
     plan: free
     healthCheckPath: /healthz
     envVars:
-      # Mock mode = zero STT credits. Flip to "live" only when you have real
-      # Gnani credentials (and add them as secret env vars, never in chat).
+      # Mock mode = zero STT credits. Flip to "live" when you have real Gnani
+      # credentials (set via the secret env vars below, never in chat).
       - key: GNANI_MODE
         value: mock
       # Invite codes for live mode (comma-separated). Leave empty for open.
       - key: INVITE_CODES
         value: ""
+      # --- Gnani Prisma live STT ---
+      # Paste the real values in the Render dashboard (Service > Environment),
+      # NOT in this file and NOT in chat.
+      - key: GNANI_API_KEY
+        sync: false
+      - key: GNANI_STT_WS_URL
+        sync: false
+      - key: GNANI_TTS_URL
+        sync: false

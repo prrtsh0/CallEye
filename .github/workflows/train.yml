@@ -1,0 +1,44 @@
+name: retrain
+
+on:
+  push:
+    paths:
+      - "data/calls/**"
+      - "app/detector/**"
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Train classifier on train split
+        run: python -m eval.train
+
+      - name: Evaluate on held-out test split
+        run: python -m eval.run --split test
+
+      - name: Upload eval report
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: eval/report.md
+
+      - name: Commit updated model report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eval/model_report.md eval/report.md || true
+          git diff --cached --quiet || git commit -m "chore(model): retrain + update report [skip ci]"
+          git push
