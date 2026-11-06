@@ -30,3 +30,8 @@ services:
       # users in a managed, persistent database instead of local SQLite.
       - key: DATABASE_URL
         sync: false
+      # --- Admin ---
+      # Protect /admin/monitor and /admin/usage. Paste an invented strong random
+      # string in the Render dashboard; send it as the "x-admin-token" header.
+      - key: ADMIN_TOKEN
+        sync: false
