@@ -45,3 +45,31 @@
   --shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, .15);
   --container: 1120px;
 }
+
+/* Dark theme (opt-in, applied via data-theme on <html>). */
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --bg-alt: #101013;
+  --card: #161619;
+  --ink: #f4f4f5;
+  --muted: #a1a1aa;
+  --line: #27272a;
+  --line-strong: #3f3f46;
+  --ink-strong: #f4f4f5;
+  --ink-soft: #d4d4d8;
+  --surface: #161619;
+  --surface-muted: #1f1f23;
+  --line-soft: #27272a;
+  --accent: #60a5fa;
+  --accent-deep: #93c5fd;
+  --accent-glow: #1d4ed8;
+  --grid-line: rgba(255, 255, 255, .06);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 1px 3px rgba(0, 0, 0, .6);
+  --shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, .7);
+  --green: #2fb98b;
+  --green-bg: #0f2b21;
+  --amber: #e0a83b;
+  --amber-bg: #2b2411;
+  --red: #f06a72;
+  --red-bg: #331419;
+}

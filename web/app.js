@@ -41,6 +41,15 @@ const els = {
   uploadFile: $("#uploadFile"),
   uploadGo: $("#uploadGo"),
   uploadOut: $("#uploadOut"),
+  setName: $("#setName"),
+  setEmail: $("#setEmail"),
+  setGName: $("#setGName"),
+  setGPhone: $("#setGPhone"),
+  setTheme: $("#setTheme"),
+  setProfileSave: $("#setProfileSave"),
+  setGuardianSave: $("#setGuardianSave"),
+  profileMsg: $("#profileMsg"),
+  guardianMsg: $("#guardianMsg"),
 };
 
 const routes = {
@@ -51,6 +60,7 @@ const routes = {
   practice: "view-practice",
   live: "view-live",
   upload: "view-upload",
+  settings: "view-settings",
 };
 
 const state = {
@@ -77,6 +87,7 @@ function show(name) {
   Object.values(routes).forEach((id) => $("#" + id).classList.add("hidden"));
   $("#" + routes[name]).classList.remove("hidden");
   setActiveNav(name);
+  if (name === "settings") openSettings();
   if (location.hash !== "#/" + name) history.replaceState(null, "", "#/" + name);
 }
 
@@ -351,7 +362,7 @@ function buildSidebar() {
 }
 
 function setActiveNav(name) {
-  const valid = { home: 1, practice: 1, live: 1, upload: 1 };
+  const valid = { home: 1, practice: 1, live: 1, upload: 1, settings: 1 };
   document.querySelectorAll(".nav-item[data-nav]").forEach((n) => {
     n.classList.toggle("active", !!valid[name] && n.dataset.nav === name);
   });
@@ -397,6 +408,66 @@ function populateGuardian() {
   } else {
     line.textContent = "Not set up yet.";
   }
+}
+
+// ---- appearance (dark mode) ----
+function applyTheme(dark) {
+  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  localStorage.setItem("calleye.theme", dark ? "dark" : "light");
+  if (els.setTheme) els.setTheme.checked = !!dark;
+}
+function initTheme() {
+  applyTheme(localStorage.getItem("calleye.theme") === "dark");
+}
+
+// ---- settings screen ----
+function openSettings() {
+  const name = (state.user && state.user.name) || "";
+  const email = (state.user && state.user.email) || "";
+  els.setName.value = name;
+  els.setEmail.value = email;
+  let g = null;
+  try { g = JSON.parse(localStorage.getItem("calleye.guardian") || "null"); } catch (e) { /* ignore */ }
+  els.setGName.value = (g && g.name) || "";
+  els.setGPhone.value = (g && g.phone) || "";
+  els.setTheme.checked = document.documentElement.getAttribute("data-theme") === "dark";
+}
+
+async function saveProfile() {
+  const name = els.setName.value.trim();
+  if (!name) { els.profileMsg.textContent = "Name cannot be empty."; els.profileMsg.className = "msg err"; return; }
+  els.profileMsg.textContent = "Saving…";
+  els.profileMsg.className = "msg";
+  try {
+    const r = await authedFetch("/api/auth/me", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    if (r.status === 401) { logout(); return; }
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || "save failed");
+    state.user = j.user;
+    populateProfile();
+    els.profileMsg.textContent = "Profile updated.";
+    els.profileMsg.className = "msg ok";
+  } catch (e) {
+    els.profileMsg.textContent = "Could not save. Try again.";
+    els.profileMsg.className = "msg err";
+  }
+}
+
+function saveGuardian() {
+  const name = els.setGName.value.trim();
+  const phone = els.setGPhone.value.trim();
+  if (name || phone) {
+    localStorage.setItem("calleye.guardian", JSON.stringify({ name, phone }));
+  } else {
+    localStorage.removeItem("calleye.guardian");
+  }
+  populateGuardian();
+  els.guardianMsg.textContent = "Guardian saved on this device.";
+  els.guardianMsg.className = "msg ok";
 }
 
 document.addEventListener("click", (e) => {
@@ -452,6 +523,9 @@ els.forgetBtn.addEventListener("click", () => {
   els.settingsHint.textContent = "Access code forgotten. You are signed out of live mode.";
 });
 els.uploadGo.addEventListener("click", runUpload);
+els.setProfileSave.addEventListener("click", saveProfile);
+els.setGuardianSave.addEventListener("click", saveGuardian);
+els.setTheme.addEventListener("change", () => applyTheme(els.setTheme.checked));
 els.authSubmit.addEventListener("click", submitAuth);
 els.authToggle.addEventListener("click", () => setAuthMode(state.authMode === "signup" ? "login" : "signup"));
 els.authPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") submitAuth(); });
@@ -464,6 +538,7 @@ if ("serviceWorker" in navigator && location.pathname.startsWith("/app")) {
 
 // ---- boot ----
 function boot() {
+  initTheme();
   buildSidebar();
   populateGuardian();
   const wasFast = checkWake();

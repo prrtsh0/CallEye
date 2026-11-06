@@ -148,6 +148,44 @@
     </div>
   </main>
 
+  <!-- Settings -->
+  <main id="view-settings" class="view view-dash hidden">
+    <div class="dash">
+      <aside class="side" data-side></aside>
+      <section class="main panel">
+        <div class="greet">
+          <h1>Settings</h1>
+          <p>Your profile, guardian, and preferences.</p>
+        </div>
+
+        <section class="settings-section">
+          <h3>Profile</h3>
+          <label>Name <input id="setName" type="text" autocomplete="name" /></label>
+          <label class="readonly">Email <input id="setEmail" type="text" readonly /></label>
+          <p id="profileMsg" class="msg"></p>
+          <button id="setProfileSave" class="btn-primary">Save profile</button>
+        </section>
+
+        <section class="settings-section">
+          <h3>Guardian</h3>
+          <p class="hint">The guardian gets a notice if a call turns red. This stays on this device only.</p>
+          <label>Guardian name <input id="setGName" type="text" placeholder="e.g. Ramesh" /></label>
+          <label>Guardian phone <input id="setGPhone" type="tel" placeholder="+91 …" /></label>
+          <p id="guardianMsg" class="msg"></p>
+          <button id="setGuardianSave" class="btn-primary">Save guardian</button>
+        </section>
+
+        <section class="settings-section">
+          <h3>Appearance</h3>
+          <label class="row">
+            <span>Dark mode</span>
+            <input id="setTheme" type="checkbox" />
+          </label>
+        </section>
+      </section>
+    </div>
+  </main>
+
   <!-- Shared sidebar (cloned into each [data-side] host) -->
   <template id="sideTpl">
     <div class="panel side-card">
@@ -164,6 +202,7 @@
       <button class="nav-item" data-nav="practice">🎧 Practice call</button>
       <button class="nav-item" data-nav="live">🔴 Go live</button>
       <button class="nav-item" data-nav="upload">⬆️ Upload recording</button>
+      <button class="nav-item" data-nav="settings">⚙️ Settings</button>
     </nav>
     <button class="btn-ghost small js-logout">Log out</button>
   </template>

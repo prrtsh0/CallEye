@@ -89,6 +89,17 @@ async def me(user: dict = Depends(require_user)):
     return {"user": {"email": user["email"], "name": user["name"]}}
 
 
+@app.patch("/api/auth/me")
+async def update_me(body: dict, user: dict = Depends(require_user)):
+    """Rename the signed-in profile (the only editable account field)."""
+    name = (body.get("name") or "").strip()
+    if not name or len(name) > 80:
+        raise HTTPException(status_code=400, detail="name is required (max 80 chars)")
+    with get_connection() as conn:
+        conn.execute("UPDATE users SET name = ? WHERE id = ?", (name, user["id"]))
+    return {"ok": True, "user": {"email": user["email"], "name": name}}
+
+
 @app.post("/api/auth/logout")
 async def logout(authorization: str = Header(default="")):
     if authorization.lower().startswith("bearer "):
