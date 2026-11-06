@@ -1,0 +1,18 @@
+# Render Blueprint — one-click deploy for CallEye.
+# Uses the Dockerfile at the repo root. The image trains the ML classifier at
+# build time, so the deployed service always ships a working model.
+services:
+  - type: web
+    name: calleye
+    runtime: docker
+    repo: https://github.com/prrtsh0/CallEye.git
+    plan: free
+    healthCheckPath: /healthz
+    envVars:
+      # Mock mode = zero STT credits. Flip to "live" only when you have real
+      # Gnani credentials (and add them as secret env vars, never in chat).
+      - key: GNANI_MODE
+        value: mock
+      # Invite codes for live mode (comma-separated). Leave empty for open.
+      - key: INVITE_CODES
+        value: ""

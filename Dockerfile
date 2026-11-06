@@ -7,6 +7,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Train the ML classifier during the image build. model.joblib is git-ignored,
+# so a fresh image must generate it from the committed training data.
+RUN python -m eval.train
+
 ENV PORT=8000
 ENV GNANI_MODE=mock
 

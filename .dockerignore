@@ -5,6 +5,6 @@ __pycache__
 .pytest_cache
 .ruff_cache
 .env
-data/calls
 *.docx
 *.docx.txt
+site/data/eval.json
