@@ -1,4 +1,4 @@
-# CallEye (Paused)
+# CallEye
 
 **CallEye is a realtime pressure-call reader.** It listens to a suspicious call
 while it is on speaker, transcribes it with Gnani Prisma, scores scam risk with
